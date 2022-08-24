@@ -7,6 +7,7 @@ import entities.Beneficiary;
 
 public abstract class Account {
     private final String accountNo;
+    private final int customerId;
     private int branchId;
     private float balance;
     private float dailyLimit;
@@ -15,8 +16,9 @@ public abstract class Account {
     private LinkedList<String> transactionIds;
 
 
-    Account(int branchId, float dailyLimit) {
+    Account(int customerId, int branchId, float dailyLimit) {
         this.accountNo = genAccountNo();
+        this.customerId = customerId;
         this.branchId = branchId;
         this.balance = 0.0F;
         this.dailyLimit = dailyLimit;
@@ -57,6 +59,10 @@ public abstract class Account {
     // Getters
     public String getAccountNo() {
         return this.accountNo;
+    }
+
+    public int getCustomerId() {
+        return this.customerId;
     }
 
     public float getBalance() {
