@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 
 import entities.Beneficiary;
+import entities.Transaction;
 
 public abstract class Account {
     private final String accountNo;
