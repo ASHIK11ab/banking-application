@@ -8,13 +8,13 @@ public class Customer extends User {
     private String ADHAAR;
 
     public Customer(String name, String phone, String accountType, 
-                    int branchId, String PAN, String ADHAAR) {
+                    String IFSC, String PAN, String ADHAAR) {
 
         super(name, phone);
         if(accountType.equals("savings"))
-            this.account = new SavingsAccount(this.getId(), branchId);
+            this.account = new SavingsAccount(this.getId(), IFSC);
         else
-            this.account = new CurrentAccount(this.getId(), branchId);
+            this.account = new CurrentAccount(this.getId(), IFSC);
 
         this.PAN = PAN;
         this.ADHAAR = ADHAAR;
