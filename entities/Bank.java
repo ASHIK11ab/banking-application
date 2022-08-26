@@ -7,68 +7,63 @@ import entities.users.*;
 import entities.account.Account;
 
 public class Bank {
-    private Admin admin;
-    private HashMap<Integer, Customer> customers;
-    private HashMap<Integer, BranchManager> managers;
-    private HashMap<String, Account> accounts;
-    private HashMap<String, Branch> branches;
+    private static Admin admin;
+    private static HashMap<Integer, Customer> customers = new HashMap<Integer, Customer>();
+    private static HashMap<Integer, BranchManager> managers = new HashMap<Integer, BranchManager>();
+    private static HashMap<String, Account> accounts = new HashMap<String, Account>();
+    private static HashMap<String, Branch> branches = new HashMap<String, Branch>();
 
-    private HashMap<Integer, Transaction> transactions;
-    private LinkedList<Integer> transactionIds;
+    private static HashMap<Integer, Transaction> transactions = new HashMap<Integer, Transaction>();
+    private static LinkedList<Integer> transactionIds = new LinkedList<Integer>();
 
-    public Bank(Admin admin) {
-        this.admin = admin;
-        this.customers = new HashMap<Integer, Customer>();
-        this.managers = new HashMap<Integer, BranchManager>();
-        this.accounts = new HashMap<String, Account>();
-        this.branches = new HashMap<String, Branch>();
-        this.transactions = new HashMap<Integer, Transaction>();
-        this.transactionIds = new LinkedList<Integer>();
+    // Getters
+    public static Admin getAdmin() {
+        return Bank.admin;
     }
 
-    public Admin getAdmin() {
-        return this.admin;
+    public static Customer getCustomer(int customerId) {
+        return Bank.customers.get(customerId);
     }
 
-    public Customer getCustomer(int customerId) {
-        return this.customers.get(customerId);
+    public static BranchManager getManager(int managerId) {
+        return Bank.managers.get(managerId);
     }
 
-    public BranchManager getManager(int managerId) {
-        return this.managers.get(managerId);
+    public static Account getAccount(String accountNo) {
+        return Bank.accounts.get(accountNo);
     }
 
-    public Account getAccount(String accountNo) {
-        return this.accounts.get(accountNo);
+    public static Branch getBranch(String IFSC) {
+        return Bank.branches.get(IFSC);
     }
 
-    public Branch getBranch(String IFSC) {
-        return this.branches.get(IFSC);
+    public static Transaction getTransaction(int transactionId) {
+        return Bank.transactions.get(transactionId);
     }
 
-    public Transaction getTransaction(int transactionId) {
-        return this.transactions.get(transactionId);
+    public static void setAdmin(Admin admin) {
+        Bank.admin = admin;
     }
 
     // Adds entities to bank.
-    public void addCustomer(Customer customer) {
-        this.customers.put(customer.getId(), customer);
+    public static void addCustomer(Customer customer) {
+        Bank.customers.put(customer.getId(), customer);
     }
 
-    public void addManager(BranchManager manager) {
-        this.managers.put(manager.getId(), manager);
+    public static void addManager(BranchManager manager) {
+        Bank.managers.put(manager.getId(), manager);
     }
 
-    public void addBranch(Branch branch) {
-        this.branches.put(branch.getIFSC(), branch);
+    public static void addBranch(Branch branch) {
+        Bank.branches.put(branch.getIFSC(), branch);
     }
 
-    public void addAccount(Account account) {
-        this.accounts.put(account.getAccountNo(), account);
+    public static void addAccount(Account account) {
+        Bank.accounts.put(account.getAccountNo(), account);
     }
 
-    public void addTransaction(Transaction transaction) {
-        this.transactionIds.addFirst(transaction.getId());
-        this.transactions.put(transaction.getId(), transaction);
+    public static void addTransaction(Transaction transaction) {
+        Bank.transactionIds.addFirst(transaction.getId());
+        Bank.transactions.put(transaction.getId(), transaction);
     }
 }
