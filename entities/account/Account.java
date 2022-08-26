@@ -9,7 +9,7 @@ import entities.Transaction;
 public abstract class Account {
     private final String accountNo;
     private final int customerId;
-    private int branchId;
+    private int branchIFSC;
     private float balance;
     private float dailyLimit;
     private String transPassword;
@@ -17,10 +17,10 @@ public abstract class Account {
     private LinkedList<String> transactionIds;
 
 
-    Account(int customerId, int branchId, float dailyLimit) {
+    Account(int customerId, int branchIFSC, float dailyLimit) {
         this.accountNo = genAccountNo();
         this.customerId = customerId;
-        this.branchId = branchId;
+        this.branchIFSC = branchIFSC;
         this.balance = 0.0F;
         this.dailyLimit = dailyLimit;
         this.transPassword = genTransPassword();
@@ -70,8 +70,8 @@ public abstract class Account {
         return this.balance;
     }
 
-    public int getBranchId() {
-        return this.branchId;
+    public int getBranchIFSC() {
+        return this.branchIFSC;
     }
 
     public float getDailyLimit() {

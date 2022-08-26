@@ -1,20 +1,14 @@
 package entities;
 
 public class Branch {
-    private final int id;
     private final String IFSC;
     private String name;
     private int managerId;
 
     public Branch(String name) {
-        this.id = genBranchId();
         this.name = name;
         this.IFSC = genBranchIFSC();
         this.managerId = -1;
-    }
-
-    public int genBranchId() {
-        return 1;
     }
 
     public String genBranchIFSC() {
@@ -28,10 +22,6 @@ public class Branch {
 
     public String getName() {
         return this.name;
-    }
-
-    public int getId() {
-        return this.id;
     }
 
     public int getManagerId() {

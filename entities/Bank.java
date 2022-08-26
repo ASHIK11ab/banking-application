@@ -11,7 +11,7 @@ public class Bank {
     private HashMap<Integer, Customer> customers;
     private HashMap<Integer, BranchManager> managers;
     private HashMap<String, Account> accounts;
-    private HashMap<Integer, Branch> branches;
+    private HashMap<String, Branch> branches;
 
     private HashMap<Integer, Transaction> transactions;
     private LinkedList<Integer> transactionIds;
@@ -21,7 +21,7 @@ public class Bank {
         this.customers = new HashMap<Integer, Customer>();
         this.managers = new HashMap<Integer, BranchManager>();
         this.accounts = new HashMap<String, Account>();
-        this.branches = new HashMap<Integer, Branch>();
+        this.branches = new HashMap<String, Branch>();
         this.transactions = new HashMap<Integer, Transaction>();
         this.transactionIds = new LinkedList<Integer>();
     }
@@ -42,8 +42,8 @@ public class Bank {
         return this.accounts.get(accountNo);
     }
 
-    public Branch getBranch(int branchId) {
-        return this.branches.get(branchId);
+    public Branch getBranch(String IFSC) {
+        return this.branches.get(IFSC);
     }
 
     public Transaction getTransaction(int transactionId) {
@@ -57,6 +57,10 @@ public class Bank {
 
     public void addManager(BranchManager manager) {
         this.managers.put(manager.getId(), manager);
+    }
+
+    public void addBranch(Branch branch) {
+        this.branches.put(branch.getIFSC(), branch);
     }
 
     public void addAccount(Account account) {
