@@ -51,7 +51,7 @@ public abstract class Account {
         String repr = "";
         repr += "\nAccount Details:\n";
         repr += "Account No: " + this.getAccountNo() + "\n";
-        repr += "IFSC Code: " + "\n";
+        repr += "IFSC Code: " + this.getBranchIFSC() + "\n";
         repr += "Balance: " + this.getBalance() + "\n";
         return repr;
     }

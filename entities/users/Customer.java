@@ -35,7 +35,6 @@ public class Customer extends User {
     // Getters
     // Use account reference to access account's attributes.
     public Account getAccount() {
-        this.ADHAAR = "333";
         return this.account;
     }
 
