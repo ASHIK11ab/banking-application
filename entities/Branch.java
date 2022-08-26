@@ -1,18 +1,30 @@
 package entities;
 
+import java.util.LinkedHashSet;
+
 public class Branch {
     private final String IFSC;
     private String name;
     private int managerId;
+    private LinkedHashSet<String> accounts;
 
     public Branch(String name) {
         this.name = name;
         this.IFSC = genBranchIFSC();
         this.managerId = -1;
+        this.accounts = new LinkedHashSet<String>();
     }
 
     public String genBranchIFSC() {
         return "IFSC";
+    }
+
+    public boolean isAccountExists(String accountNo) {
+        return this.accounts.contains(accountNo);
+    }
+
+    public void addAccount(String accountNo) {
+        this.accounts.add(accountNo);
     }
 
     // Getters
