@@ -3,21 +3,15 @@ package entities;
 public class Beneficiary {
     private String accountNo;
     private String IFSC;
-    private String bankName;
     private String name;
 
-    public Beneficiary(String account, String IFSC, String bankName, String name) {
+    public Beneficiary(String account, String IFSC, String name) {
         this.accountNo = account;
         this.IFSC = IFSC;
-        this.bankName = bankName;
         this.name = name;
     }
 
     // Getters
-    public String getBankName() {
-        return this.bankName;
-    }
-
     public String getAccountNo() {
         return this.accountNo;
     }
@@ -31,10 +25,6 @@ public class Beneficiary {
     }
 
     // Setters
-    public void setBankName(String bankName) {
-        this.bankName = bankName;
-    }
-
     public void setAccountNo(String accountNo) {
         this.accountNo = accountNo;
     }
