@@ -15,20 +15,18 @@ public class Customer extends User {
             this.account = new SavingsAccount(this.getId(), IFSC);
         else
             this.account = new CurrentAccount(this.getId(), IFSC);
-
         this.PAN = PAN;
         this.ADHAAR = ADHAAR;
     }
 
     public String toString() {
         String repr = "";
-        repr += "Name: " + this.getName() + "\n";
-        repr += "Id: " + this.getId() + "\n";
-        repr += "Phone: " + this.getPhone() + "\n";
-        repr += "DOB: " + this.getDOB() + "\n";
-        repr += "\nPAN No: " + this.getPAN() + "\n";
-        repr += "ADHAAR No: " + this.getADHAAR() + "\n";
-        repr += this.account;
+        repr += "Name        : " + this.getName() + "\n";
+        repr += "Customer id : " + this.getId() + "\n";
+        repr += "Phone       : " + this.getPhone() + "\n";
+        repr += "DOB         : " + this.getDOB() + "\n";
+        repr += "PAN No      : " + this.getPAN() + "\n";
+        repr += "ADHAAR No   : " + this.getADHAAR() + "\n";
         return repr;
     }
 
