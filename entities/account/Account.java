@@ -78,8 +78,14 @@ public abstract class Account {
     }
 
 
-    public void removeBeneficiary(Beneficiary beneficiary) {}
+    // Removes a beneficiary.
+    public void removeBeneficiary(int index) {
+        String removedAccountNo = this.beneficiaries.get(index).getAccountNo();
+        this.beneficiaryAccounts.remove(removedAccountNo);
+        this.beneficiaries.remove(index);
+    }
 
+    
     public void addTransaction(Transaction transaction) {}
 
     public boolean isTransPasswordEqual(String password) {

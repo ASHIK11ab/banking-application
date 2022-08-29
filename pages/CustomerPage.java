@@ -1,5 +1,6 @@
 package pages;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import entities.Bank;
@@ -7,9 +8,9 @@ import entities.Beneficiary;
 import entities.account.Account;
 import entities.users.Customer;
 
+
 public class CustomerPage {
     private final Customer customer;
-
 
     public CustomerPage(int userId) {
         this.customer = Bank.getCustomer(userId);
@@ -45,6 +46,7 @@ public class CustomerPage {
             switch(choice) {
                 case 2: this.displayBalance(); break;
                 case 3: this.addBeneficiary(); break;
+                case 4: this.removeBeneficiary(); break;
                 case 5: this.displayBeneficiaries(); break;
                 case 6: this.displayProfile(); break;
                 case 7: this.displayAccount(); break;
@@ -77,9 +79,16 @@ public class CustomerPage {
             return;
         }
 
+        // Verify account details.
         Account account = Bank.getAccount(accountNo);
         if(account == null) {
             System.out.println("\nInvalid account details !!!");
+            return;
+        }
+
+        // Avoid duplicate beneficiaries.
+        if(this.customer.getAccount().isBeneficiaryExists(accountNo)) {
+            System.out.println("\nBeneficiary aldready exists !!!");
             return;
         }
         
@@ -102,11 +111,45 @@ public class CustomerPage {
     }
 
 
+    public void removeBeneficiary() {
+        Account account = this.customer.getAccount();
+        int beneficiariesCnt = account.getBeneficiaries().size();
+        int index;
+
+        if(beneficiariesCnt == 0) {
+            System.out.println("\nNo beneficiaries added !!!");
+            System.out.println("Cannot remove beneficiary !!!");
+            return;
+        }
+
+        Scanner sc = new Scanner(System.in);
+
+        this.displayBeneficiaries();
+        System.out.println();
+        System.out.print("Enter beneficiary number to remove: ");
+        index = sc.nextInt();
+
+        if(index >= 1 && index <= beneficiariesCnt) {
+            account.removeBeneficiary(index-1);
+            System.out.println("\nBeneficiary removed successfully !!!");
+        } else {
+            System.out.println("\nInvalid beneficiary number !!!");
+        }
+    }
+
+
     public void displayBeneficiaries() {
+        ArrayList<Beneficiary> beneficiaries = this.customer.getAccount().getBeneficiaries();
+        
+        if(beneficiaries.size() == 0) {
+            System.out.println("\nNo beneficiaries added !!!");
+            return;
+        }
+
         int counter = 1;
         System.out.println("\nBeneficiaries:");
         System.out.println("--------------");
-        for(Beneficiary beneficiary : this.customer.getAccount().getBeneficiaries()) {
+        for(Beneficiary beneficiary : beneficiaries) {
             System.out.println("Beneficiary No : " + counter);
             System.out.println(beneficiary);
             counter++;
