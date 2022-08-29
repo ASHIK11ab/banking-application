@@ -1,12 +1,15 @@
 package entities.account;
 
+import java.time.LocalDate;
 import java.util.Random;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 import entities.Beneficiary;
 import entities.Transaction;
+import ds.Pair;
 
 public abstract class Account {
     private static int _counter = 100000;
@@ -20,7 +23,7 @@ public abstract class Account {
     private ArrayList<Beneficiary> beneficiaries;
     // Stores account numbers of the added beneficiaries.
     private HashSet<String> beneficiaryAccounts;
-    private LinkedList<String> transactionIds;
+    private HashMap<LocalDate, Pair<LinkedList<Transaction>, LocalDate>> transactions;
 
 
     Account(int customerId, String IFSC, String type, float dailyLimit) {
@@ -28,13 +31,20 @@ public abstract class Account {
         this.accountNo = genAccountNo(IFSC, type);
         this.customerId = customerId;
         this.branchIFSC = IFSC;
-        this.balance = 0.0F;
+        this.balance = 1000.0F;
         this.type = type;
         this.dailyLimit = dailyLimit;
         this.transPassword = genPassword();
         this.beneficiaries = new ArrayList<Beneficiary>();
         this.beneficiaryAccounts = new HashSet<String>();
-        this.transactionIds = new LinkedList<String>();
+
+        // Transactions are indexed by transaction date, its value is a 'Pair'.
+        // The pair contains list of transactions on a date and the date of the
+        // transaction prior to the current date's transaction.
+        // Previous date is used for efficiently iterating transactions over a
+        // given date range.
+        this.transactions = 
+            new HashMap<LocalDate, Pair<LinkedList<Transaction>, LocalDate>>();
     }
 
 
@@ -85,7 +95,7 @@ public abstract class Account {
         this.beneficiaries.remove(index);
     }
 
-    
+
     public void addTransaction(Transaction transaction) {}
 
     public boolean isTransPasswordEqual(String password) {
@@ -131,8 +141,8 @@ public abstract class Account {
         return this.beneficiaries;
     }
 
-    public LinkedList<String> getTransactionHistories() {
-        return this.transactionIds;
+    public HashMap<LocalDate, Pair<LinkedList<Transaction>, LocalDate>> getTransactionHistories() {
+        return this.transactions;
     }
 
     // Setters
