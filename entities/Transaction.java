@@ -4,56 +4,29 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Transaction {
-    private final int id;
-    private final String payerAccountNo;
-    private final String payeeAccountNo;
-
-    private final float amount;
-    private final boolean isSuccessfull;
-    private final LocalDate date;
-    private final LocalTime time;
+    private static long _counter = 100000000000000L;
+    public final long id;
+    public final String payerAccountNo;
+    public final float payerBeforeBalance;
+    public final String payeeAccountNo;
+    public final float payeeBeforeBalance;
+    public final float amount;
+    public final boolean isSuccessfull;
+    public final LocalDate date;
+    public final LocalTime time;
 
     public Transaction(String payerAccountNo, String payeeAccountNo, float amount,
-                        boolean isSuccessfull, LocalDate date, LocalTime time) {
-        this.id = genTransId();
+                        boolean isSuccessfull, float payerBeforeBalance, float payeeBeforeBalance, 
+                        LocalDate date, LocalTime time) {
+        Transaction._counter++;
+        this.id = Transaction._counter;
         this.payerAccountNo = payerAccountNo;
+        this.payerBeforeBalance = payerBeforeBalance;
         this.payeeAccountNo = payeeAccountNo;
+        this.payeeBeforeBalance = payeeBeforeBalance;
         this.amount = amount;
         this.isSuccessfull = isSuccessfull;
         this.date = date;
         this.time = time;
-    }
-
-    public int genTransId() {
-        return 2;
-    }
-
-    public boolean isSuccessfull() {
-        return this.isSuccessfull;
-    }
-
-    // Getters
-    public int getId() {
-        return this.id;
-    }
-
-    public String getPayerAccountNo() {
-        return this.payerAccountNo;
-    }
-
-    public String getPayeeAccountNo() {
-        return this.payeeAccountNo;
-    }
-
-    public float getAmount() {
-        return this.amount;
-    }
-
-    public LocalDate getDate() {
-        return this.date;
-    }
-
-    public LocalTime getTime() {
-        return this.time;
     }
 }
