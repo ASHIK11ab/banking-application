@@ -4,7 +4,8 @@ import java.util.Random;
 
 public class User {
     private static int _counter = 10000000;
-    private final int id;
+    // id is final, for testing purposes made as not final.
+    private int id;
     private String name;
     private String DOB;
     private String password;
@@ -56,6 +57,10 @@ public class User {
     }
 
     // Setters
+    public void _setUserId(int id) {
+        this.id = id;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

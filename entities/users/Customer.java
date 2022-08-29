@@ -54,4 +54,12 @@ public class Customer extends User {
     public void setADHAAR(String ADHAAR) {
         this.ADHAAR = ADHAAR;
     }
+
+    public void setLoginPassword(String password) {
+        this.setPassword(password);
+    }
+
+    public void setTransPassword(String password) {
+        this.getAccount().setTransPassword(password);
+    }
 }
