@@ -5,26 +5,33 @@ import entities.users.Customer;
 import entities.Branch;
 
 public class App {
-    private Bank bank;
-
     App() {
         Admin admin = new Admin("admin-user", "899879879");
 
-        Bank bank = new Bank(admin);
+        Bank.setAdmin(admin);
+
         Branch branch = new Branch("Poonamallee");
-        bank.addBranch(branch);
+        Bank.addBranch(branch);
 
         BranchManager manager = new BranchManager("Jason", "998757334", branch.getIFSC());
-        bank.addManager(manager);
+        Bank.addManager(manager);
         manager.addToBranch(branch.getIFSC());
 
         Customer customer = new Customer("Test 1", "937957495", "savings", branch.getIFSC(), "ADPA94757", "489571973264");
-
-        bank.addAccount(customer.getAccount());
+        Bank.addAccount(customer.getAccount());
         branch.addAccount(customer.getAccount().getAccountNo());
-        bank.addCustomer(customer);
+        Bank.addCustomer(customer);
 
-        this.bank = bank;
+        Customer customer2 = new Customer("Test 2", "21235874", "current", branch.getIFSC(), "QWT937432", "832935712347");
+        Bank.addAccount(customer2.getAccount());
+        branch.addAccount(customer2.getAccount().getAccountNo());
+        Bank.addCustomer(customer2);
+
+        // System.out.println(branch);
+        // System.out.println(customer);
+        // System.out.println(customer.getAccount());
+        // System.out.println(customer2);
+        // System.out.println(customer2.getAccount());
     }
     public static void main(String[] args) {
         App app = new App();
@@ -34,7 +41,5 @@ public class App {
     public void run() {
         System.out.println("Welcome to 'YOUR' bank");
         System.out.println("----------------------\n");
-
-        System.out.println(this.bank);
     }
 }
