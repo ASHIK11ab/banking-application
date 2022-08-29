@@ -1,5 +1,6 @@
 package entities.account;
 
+import java.util.Random;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
@@ -7,6 +8,7 @@ import entities.Beneficiary;
 import entities.Transaction;
 
 public abstract class Account {
+    private static int _counter = 100000;
     private final String accountNo;
     private final int customerId;
     private String branchIFSC;
@@ -17,24 +19,43 @@ public abstract class Account {
     private LinkedList<String> transactionIds;
 
 
-    Account(int customerId, String IFSC, float dailyLimit) {
-        this.accountNo = genAccountNo();
+    Account(int customerId, String IFSC, String type, float dailyLimit) {
+        Account._counter++;
+        this.accountNo = genAccountNo(IFSC, type);
         this.customerId = customerId;
         this.branchIFSC = IFSC;
         this.balance = 0.0F;
         this.dailyLimit = dailyLimit;
-        this.transPassword = genTransPassword();
+        this.transPassword = genPassword();
         this.beneficiaries = new ArrayList<Beneficiary>();
         this.transactionIds = new LinkedList<String>();
     }
 
 
-    private String genAccountNo() {
-        return "111";
+    private String genAccountNo(String IFSC, String type) {
+        String accountNo = "";
+        accountNo += IFSC.substring(IFSC.length() - 4, IFSC.length());
+
+        switch(type) {
+            case "savings": accountNo += "11";
+            case "current": accountNo += "21";
+        }
+
+        accountNo += Account._counter;
+        return accountNo;
     }
 
-    private String genTransPassword() {
-        return "222";
+    private String genPassword() {
+        String pass = "";
+        Random random = new Random();
+
+        for(byte i = 0; i < 4; ++i)
+            pass += (char) ('a' + random.nextInt(26));
+
+        for(byte i = 0; i < 4; ++i)
+            pass += random.nextInt(10);
+
+        return pass;
     }
 
     public void addBeneficiary(Beneficiary beneficiary) {}
