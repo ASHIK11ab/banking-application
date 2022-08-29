@@ -11,6 +11,14 @@ public class Beneficiary {
         this.name = name;
     }
 
+    public String toString() {
+        String repr = "";
+        repr += "Name           : " + this.getName() + "\n";
+        repr += "Account No     : " + this.getAccountNo() + "\n";
+        repr += "IFSC Code      : " + this.getIFSC() + "\n";
+        return repr;
+    }
+
     // Getters
     public String getAccountNo() {
         return this.accountNo;
