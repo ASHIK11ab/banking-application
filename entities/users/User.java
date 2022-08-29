@@ -1,6 +1,9 @@
 package entities.users;
 
+import java.util.Random;
+
 public class User {
+    private static int _counter = 10000000;
     private final int id;
     private String name;
     private String DOB;
@@ -8,18 +11,27 @@ public class User {
     private String phone;
 
     public User(String name, String phone) {
+        User._counter++;
         this.id = genUserId();
         this.name = name;
-        this.password = genUserPassword();
+        this.password = genPassword();
         this.phone = phone;
     }
 
     private int genUserId() {
-        return 1;
+        return User._counter;
     }
 
-    private String genUserPassword() {
-        return "pass";
+    private String genPassword() {
+        String pass = "";
+        Random random = new Random();
+        for(byte i = 0; i < 4; ++i)
+            pass += (char) ('a' + random.nextInt(26));
+
+        for(byte i = 0; i < 4; ++i)
+            pass += random.nextInt(10);
+
+        return pass;
     }
 
     public boolean isPasswordEqual(String pass) {
