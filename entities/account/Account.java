@@ -12,6 +12,7 @@ public abstract class Account {
     private final String accountNo;
     private final int customerId;
     private String branchIFSC;
+    private String type;
     private float balance;
     private float dailyLimit;
     private String transPassword;
@@ -25,6 +26,7 @@ public abstract class Account {
         this.customerId = customerId;
         this.branchIFSC = IFSC;
         this.balance = 0.0F;
+        this.type = type;
         this.dailyLimit = dailyLimit;
         this.transPassword = genPassword();
         this.beneficiaries = new ArrayList<Beneficiary>();
@@ -37,8 +39,8 @@ public abstract class Account {
         accountNo += IFSC.substring(IFSC.length() - 4, IFSC.length());
 
         switch(type) {
-            case "savings": accountNo += "11";
-            case "current": accountNo += "21";
+            case "savings": accountNo += "11"; break;
+            case "current": accountNo += "21"; break;
         }
 
         accountNo += Account._counter;
@@ -58,7 +60,10 @@ public abstract class Account {
         return pass;
     }
 
-    public void addBeneficiary(Beneficiary beneficiary) {}
+    // Adds a beneficiary to this account.
+    public void addBeneficiary(Beneficiary beneficiary) {
+        this.beneficiaries.add(beneficiary);
+    }
 
     public void removeBeneficiary(Beneficiary beneficiary) {}
 
@@ -70,10 +75,10 @@ public abstract class Account {
 
     public String toString() {
         String repr = "";
-        repr += "\nAccount Details:\n";
-        repr += "Account No: " + this.getAccountNo() + "\n";
-        repr += "IFSC Code: " + this.getBranchIFSC() + "\n";
-        repr += "Balance: " + this.getBalance() + "\n";
+        repr += "Account No   : " + this.getAccountNo() + "\n";
+        repr += "IFSC Code    : " + this.getBranchIFSC() + "\n";
+        repr += "Account type : " + this.getType() + "\n";
+        repr += "Balance      : " + this.getBalance() + "\n";
         return repr;
     }
 
@@ -81,6 +86,10 @@ public abstract class Account {
     // Getters
     public String getAccountNo() {
         return this.accountNo;
+    }
+
+    public String getType() {
+        return this.type;
     }
 
     public int getCustomerId() {
