@@ -3,20 +3,22 @@ package entities;
 import java.util.LinkedHashSet;
 
 public class Branch {
+    private static int _counter;
     private final String IFSC;
     private String name;
     private int managerId;
     private LinkedHashSet<String> accounts;
 
     public Branch(String name) {
+        Branch._counter++;
         this.name = name;
         this.IFSC = genBranchIFSC();
         this.managerId = -1;
         this.accounts = new LinkedHashSet<String>();
     }
 
-    public String genBranchIFSC() {
-        return "IFSC";
+    private String genBranchIFSC() {
+        return String.format("YESB0%06d", _counter);
     }
 
     public boolean isAccountExists(String accountNo) {
