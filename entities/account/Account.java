@@ -3,6 +3,7 @@ package entities.account;
 import java.util.Random;
 import java.util.LinkedList;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import entities.Beneficiary;
 import entities.Transaction;
@@ -17,6 +18,8 @@ public abstract class Account {
     private float dailyLimit;
     private String transPassword;
     private ArrayList<Beneficiary> beneficiaries;
+    // Stores account numbers of the added beneficiaries.
+    private HashSet<String> beneficiaryAccounts;
     private LinkedList<String> transactionIds;
 
 
@@ -30,6 +33,7 @@ public abstract class Account {
         this.dailyLimit = dailyLimit;
         this.transPassword = genPassword();
         this.beneficiaries = new ArrayList<Beneficiary>();
+        this.beneficiaryAccounts = new HashSet<String>();
         this.transactionIds = new LinkedList<String>();
     }
 
@@ -47,6 +51,7 @@ public abstract class Account {
         return accountNo;
     }
 
+
     private String genPassword() {
         String pass = "";
         Random random = new Random();
@@ -60,10 +65,18 @@ public abstract class Account {
         return pass;
     }
 
+    
     // Adds a beneficiary to this account.
     public void addBeneficiary(Beneficiary beneficiary) {
         this.beneficiaries.add(beneficiary);
+        this.beneficiaryAccounts.add(beneficiary.getAccountNo());
     }
+
+
+    public boolean isBeneficiaryExists(String accountNo) {
+        return this.beneficiaryAccounts.contains(accountNo);
+    }
+
 
     public void removeBeneficiary(Beneficiary beneficiary) {}
 
