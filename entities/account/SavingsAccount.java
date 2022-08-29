@@ -4,7 +4,7 @@ public class SavingsAccount extends Account {
     private static float depositIntrestRate;
 
     public SavingsAccount(int customerId, String IFSC) {
-        super(customerId, IFSC, 40000.0F);
+        super(customerId, IFSC, "savings", 40000.0F);
         SavingsAccount.depositIntrestRate = 0.035F;
     }
 
