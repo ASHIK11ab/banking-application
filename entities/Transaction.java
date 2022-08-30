@@ -31,7 +31,15 @@ public class Transaction {
         this.time = LocalTime.now();
     }
 
+
     public String toString() {
-        return this.id + " : " + this.payerAccountNo + " : " + this.amount;
+        String repr = "";
+        repr += "Transaction id : " + this.id + "\n";
+        repr += "Payer A/C No   : " + this.payerAccountNo + "\n";
+        repr += "Payee A/C No   : " + this.payeeAccountNo + "\n";
+        repr += "Amount         : " + this.amount + "\n";
+        repr += "Date           : " + this.date + "\n";
+        repr += "Time           : " + this.time;
+        return repr;
     }
 }
