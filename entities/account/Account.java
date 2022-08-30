@@ -15,6 +15,7 @@ public abstract class Account {
     private static int _counter = 100000;
     private final String accountNo;
     private final int customerId;
+    private boolean isActive;
     private String branchIFSC;
     private String type;
     private float balance;
@@ -23,6 +24,7 @@ public abstract class Account {
     private ArrayList<Beneficiary> beneficiaries;
     // Stores account numbers of the added beneficiaries.
     private HashSet<String> beneficiaryAccounts;
+    private LocalDate prevTransactionDate;
     private HashMap<LocalDate, Pair<LinkedList<Transaction>, LocalDate>> transactions;
 
 
@@ -30,6 +32,7 @@ public abstract class Account {
         Account._counter++;
         this.accountNo = genAccountNo(IFSC, type);
         this.customerId = customerId;
+        this.isActive = true;
         this.branchIFSC = IFSC;
         this.balance = 1000.0F;
         this.type = type;
@@ -37,6 +40,7 @@ public abstract class Account {
         this.transPassword = genPassword();
         this.beneficiaries = new ArrayList<Beneficiary>();
         this.beneficiaryAccounts = new HashSet<String>();
+        this.prevTransactionDate = null;
 
         // Transactions are indexed by transaction date, its value is a 'Pair'.
         // The pair contains list of transactions on a date and the date of the
@@ -75,11 +79,31 @@ public abstract class Account {
         return pass;
     }
 
+
+    public void activate() {
+        this.isActive = true;
+    }
+
+
+    public void deactivate() {
+        this.isActive = false;
+    }
+
+
+    public void credit(float amount) {
+        this.balance += amount;
+    }
+
+
+    public void debit(float amount) {
+        this.balance -= amount;
+    }
+
     
     // Adds a beneficiary to this account.
     public void addBeneficiary(Beneficiary beneficiary) {
-        this.beneficiaries.add(beneficiary);
         this.beneficiaryAccounts.add(beneficiary.getAccountNo());
+        this.beneficiaries.add(beneficiary);
     }
 
 
@@ -98,17 +122,14 @@ public abstract class Account {
 
     public void addTransaction(Transaction transaction) {}
 
+
     public boolean isTransPasswordEqual(String password) {
         return this.transPassword.equals(password);
     }
 
-    public String toString() {
-        String repr = "";
-        repr += "Account No   : " + this.getAccountNo() + "\n";
-        repr += "IFSC Code    : " + this.getBranchIFSC() + "\n";
-        repr += "Account type : " + this.getType() + "\n";
-        repr += "Balance      : " + this.getBalance() + "\n";
-        return repr;
+
+    public boolean isActive() {
+        return this.isActive;
     }
 
 
@@ -117,33 +138,57 @@ public abstract class Account {
         return this.accountNo;
     }
 
+
     public String getType() {
         return this.type;
     }
+
 
     public int getCustomerId() {
         return this.customerId;
     }
 
+
     public float getBalance() {
         return this.balance;
     }
+
 
     public String getBranchIFSC() {
         return this.branchIFSC;
     }
 
+
     public float getDailyLimit() {
         return this.dailyLimit;
     }
+
 
     public ArrayList<Beneficiary> getBeneficiaries() {
         return this.beneficiaries;
     }
 
-    public HashMap<LocalDate, Pair<LinkedList<Transaction>, LocalDate>> getTransactionHistories() {
+
+    // Returns a added beneficiary.
+    public Beneficiary getBeneficiary(int index) {
+        return this.beneficiaries.get(index);
+    }
+
+
+    // Returns all transactions of this account.
+    public HashMap<LocalDate, Pair<LinkedList<Transaction>, LocalDate>> getTransactions() {
         return this.transactions;
     }
+
+
+    // Returns all transactions of this account on a given date.
+    public LinkedList<Transaction> getTransactions(LocalDate date) {
+        if(this.transactions.get(date) == null)
+            return new LinkedList<Transaction>();
+        else
+            return this.transactions.get(date).getFirst();
+    }
+
 
     // Setters
     public void setDailyLimit(float limit) {
@@ -152,5 +197,15 @@ public abstract class Account {
 
     public void setTransPassword(String pass) {
         this.transPassword = pass;
+    }
+
+
+    public String toString() {
+        String repr = "";
+        repr += "Account No   : " + this.getAccountNo() + "\n";
+        repr += "IFSC Code    : " + this.getBranchIFSC() + "\n";
+        repr += "Account type : " + this.getType() + "\n";
+        repr += "Balance      : " + this.getBalance() + "\n";
+        return repr;
     }
 }
