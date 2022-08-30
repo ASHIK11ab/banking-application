@@ -13,8 +13,8 @@ public class Bank {
     private static HashMap<String, Account> accounts = new HashMap<String, Account>();
     private static HashMap<String, Branch> branches = new HashMap<String, Branch>();
 
-    private static HashMap<Integer, Transaction> transactions = new HashMap<Integer, Transaction>();
-    private static LinkedList<Integer> transactionIds = new LinkedList<Integer>();
+    private static HashMap<Long, Transaction> transactions = new HashMap<Long, Transaction>();
+    private static LinkedList<Long> transactionIds = new LinkedList<Long>();
 
     // Getters
     public static Admin getAdmin() {
@@ -63,7 +63,7 @@ public class Bank {
     }
 
     public static void addTransaction(Transaction transaction) {
-        Bank.transactionIds.addFirst(transaction.getId());
-        Bank.transactions.put(transaction.getId(), transaction);
+        Bank.transactionIds.addFirst(transaction.id);
+        Bank.transactions.put(transaction.id, transaction);
     }
 }

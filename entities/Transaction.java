@@ -3,6 +3,8 @@ package entities;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import entities.account.Account;
+
 public class Transaction {
     private static long _counter = 100000000000000L;
     public final long id;
@@ -15,18 +17,21 @@ public class Transaction {
     public final LocalDate date;
     public final LocalTime time;
 
-    public Transaction(String payerAccountNo, String payeeAccountNo, float amount,
-                        boolean isSuccessfull, float payerBeforeBalance, float payeeBeforeBalance, 
-                        LocalDate date, LocalTime time) {
+    public Transaction(Account payerAccount, Account payeeAccount, 
+                        float amount, boolean isSuccessfull) {
         Transaction._counter++;
         this.id = Transaction._counter;
-        this.payerAccountNo = payerAccountNo;
-        this.payerBeforeBalance = payerBeforeBalance;
-        this.payeeAccountNo = payeeAccountNo;
-        this.payeeBeforeBalance = payeeBeforeBalance;
-        this.amount = amount;
+        this.payerAccountNo = payerAccount.getAccountNo();
+        this.payerBeforeBalance = payerAccount.getBalance();
+        this.payeeAccountNo = payeeAccount.getAccountNo();
+        this.payeeBeforeBalance = payeeAccount.getBalance();
         this.isSuccessfull = isSuccessfull;
-        this.date = date;
-        this.time = time;
+        this.amount = amount;
+        this.date = LocalDate.now();
+        this.time = LocalTime.now();
+    }
+
+    public String toString() {
+        return this.id + " : " + this.payerAccountNo + " : " + this.amount;
     }
 }
