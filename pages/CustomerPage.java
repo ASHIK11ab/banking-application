@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import entities.Bank;
 import entities.Beneficiary;
+import entities.Transaction;
 import entities.account.Account;
 import entities.users.Customer;
 
@@ -44,6 +45,7 @@ public class CustomerPage {
             choice = sc.nextInt();
 
             switch(choice) {
+                case 1: this.fundTransfer(); break;
                 case 2: this.displayBalance(); break;
                 case 3: this.addBeneficiary(); break;
                 case 4: this.removeBeneficiary(); break;
@@ -59,6 +61,106 @@ public class CustomerPage {
     }
 
 
+    public void fundTransfer() {
+        // Account of the customer.
+        Account customerAccount = this.customer.getAccount();
+        Account beneficiaryAccount;
+        Transaction transaction;
+        String beneficiaryAccountNo;
+        String transPassword;
+        String msg = "";
+        float amount;
+        int beneficiaryNo;
+        int transactionStatusCode;
+        boolean isSuccessfull = false;
+
+        Scanner sc = new Scanner(System.in);
+
+        if(customerAccount.getBeneficiaries().size() == 0) {
+            System.out.println("\nNo beneficiaries added !!!");
+            System.out.println("Add beneficiaries to transer funds !!!");
+            return;
+        }
+
+        System.out.println("\nFund Transfer:");
+        System.out.println("--------------");
+        System.out.print("Enter beneficiary no ('0' to display added beneficiaries): ");
+        beneficiaryNo = sc.nextInt();
+
+        if(beneficiaryNo == 0) {
+            this.displayBeneficiaries();
+            System.out.print("\nEnter beneficiary no: ");
+            beneficiaryNo = sc.nextInt();
+        }
+
+        System.out.print("\nEnter amount to transfer: ");
+        amount = sc.nextFloat();
+        System.out.print("\nEnter transaction password: ");
+        transPassword = System.console().readLine();
+
+        // Validate transaction password.
+        if(!customerAccount.isTransPasswordEqual(transPassword)) {
+            System.out.println("\n\nIncorrect transaction password");
+            return;
+        }
+        
+        // Validate beneficiary account.
+        if(!(beneficiaryNo > 0 && 
+                beneficiaryNo <= customerAccount.getBeneficiaries().size()) ) {
+            System.out.println("\n\nInvalid Beneficiary no !!!");
+            return;
+        }
+
+        beneficiaryAccountNo = customerAccount.getBeneficiary(beneficiaryNo - 1).getAccountNo();
+        beneficiaryAccount = Bank.getAccount(beneficiaryAccountNo);
+
+        if(!beneficiaryAccount.isActive()) {
+            System.out.println("\n\nCannot transfer amount !!!");
+            return;
+        }
+
+        transactionStatusCode = customerAccount.isTransactionValid(amount);
+        switch(transactionStatusCode) {
+            case 200: isSuccessfull = true;
+                      msg = "\n\nTransaction Successfull";
+                      break;
+            case 401: isSuccessfull = false;
+                      msg = "\n\nTransaction failed !!!\nInsufficient balance !!!";
+                      break;
+            case 402: isSuccessfull = false;
+                      msg = "\n\nTransaction failed !!!\nMaximum daily limit reached !!!";
+                      break;
+        }
+
+        System.out.println(msg);
+
+        if(transactionStatusCode == 200) {
+           // Proceed with transaction.
+            customerAccount.debit(amount);
+            beneficiaryAccount.credit(amount); 
+        }
+        
+        // Create transaction record.
+        transaction = new Transaction(customerAccount, beneficiaryAccount, 
+                                        amount, isSuccessfull);
+        Bank.addTransaction(transaction);
+
+        // Add transaction record to the involving branches.
+        // Branch payerBranch = Bank.getBranch(customerAccount.getBranchIFSC());
+        // Branch payeeBranch = Bank.getBranch(beneficiaryAccount.getBranchIFSC());
+        // if(payerBranch == payeeBranch)
+        //     payerBranch.addTransaction(transaction);
+        // else {
+        //     payerBranch.addTransaction(transaction);
+        //     payeeBranch.addTransaction(transaction);
+        // }
+
+        customerAccount.addTransaction(transaction);
+        beneficiaryAccount.addTransaction(transaction);
+        System.out.println(customerAccount.getTransactions());
+    }
+
+
     public void addBeneficiary() {
         String accountNo;
         String confirmAccountNo;
@@ -71,7 +173,7 @@ public class CustomerPage {
         accountNo = System.console().readLine();
         System.out.print("Confirm account no: ");
         confirmAccountNo = System.console().readLine();
-        System.out.print("\nBeneficiary name: ");
+        System.out.print("Beneficiary name: ");
         name = System.console().readLine();
 
         if(!accountNo.equals(confirmAccountNo)) {
