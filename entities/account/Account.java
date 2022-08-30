@@ -19,16 +19,15 @@ public abstract class Account {
     private String branchIFSC;
     private String type;
     private float balance;
-    private float dailyLimit;
     private String transPassword;
     private ArrayList<Beneficiary> beneficiaries;
     // Stores account numbers of the added beneficiaries.
     private HashSet<String> beneficiaryAccounts;
-    private LocalDate prevTransactionDate;
+    private LocalDate recentTransactionDate;
     private HashMap<LocalDate, Pair<LinkedList<Transaction>, LocalDate>> transactions;
 
 
-    Account(int customerId, String IFSC, String type, float dailyLimit) {
+    Account(int customerId, String IFSC, String type) {
         Account._counter++;
         this.accountNo = genAccountNo(IFSC, type);
         this.customerId = customerId;
@@ -36,11 +35,10 @@ public abstract class Account {
         this.branchIFSC = IFSC;
         this.balance = 1000.0F;
         this.type = type;
-        this.dailyLimit = dailyLimit;
         this.transPassword = genPassword();
         this.beneficiaries = new ArrayList<Beneficiary>();
         this.beneficiaryAccounts = new HashSet<String>();
-        this.prevTransactionDate = null;
+        this.recentTransactionDate = null;
 
         // Transactions are indexed by transaction date, its value is a 'Pair'.
         // The pair contains list of transactions on a date and the date of the
@@ -50,6 +48,8 @@ public abstract class Account {
         this.transactions = 
             new HashMap<LocalDate, Pair<LinkedList<Transaction>, LocalDate>>();
     }
+
+    public abstract int isTransactionValid(float amount);
 
 
     private String genAccountNo(String IFSC, String type) {
@@ -120,7 +120,27 @@ public abstract class Account {
     }
 
 
-    public void addTransaction(Transaction transaction) {}
+    public void addTransaction(Transaction transaction) {
+        LocalDate today = LocalDate.now();
+        LinkedList<Transaction> todayTransactions;
+        
+        // First transaction of today.
+        if(!this.transactions.containsKey(today)) {
+            todayTransactions = new LinkedList<Transaction>();
+            todayTransactions.addFirst(transaction);
+
+            Pair<LinkedList<Transaction>, LocalDate> transactionPair = 
+                new Pair<LinkedList<Transaction>, LocalDate>();
+            transactionPair.setFirst(todayTransactions);
+            transactionPair.setSecond(this.recentTransactionDate);
+
+            this.transactions.put(today, transactionPair);
+            this.recentTransactionDate = today;
+        } else {
+            todayTransactions = this.transactions.get(today).getFirst();
+            todayTransactions.addFirst(transaction);
+        }
+    }
 
 
     public boolean isTransPasswordEqual(String password) {
@@ -159,11 +179,6 @@ public abstract class Account {
     }
 
 
-    public float getDailyLimit() {
-        return this.dailyLimit;
-    }
-
-
     public ArrayList<Beneficiary> getBeneficiaries() {
         return this.beneficiaries;
     }
@@ -188,12 +203,7 @@ public abstract class Account {
         else
             return this.transactions.get(date).getFirst();
     }
-
-
-    // Setters
-    public void setDailyLimit(float limit) {
-        this.dailyLimit = limit;
-    }
+    
 
     public void setTransPassword(String pass) {
         this.transPassword = pass;
