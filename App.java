@@ -1,6 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import entities.Bank;
 import entities.users.Admin;
@@ -9,6 +12,8 @@ import entities.users.Customer;
 import entities.users.User;
 import pages.CustomerPage;
 import entities.Branch;
+import entities.Transaction;
+import entities.account.Account;
 
 public class App {
     App() {
@@ -45,11 +50,26 @@ public class App {
         branch.addAccount(customer2.getAccount().getAccountNo());
         Bank.addCustomer(customer2);
 
-        // System.out.println(branch);
-        // System.out.println(customer);
-        // System.out.println(customer.getAccount());
-        // System.out.println(customer2);
-        // System.out.println(customer2.getAccount());
+        // Sample transaction data.
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd:MM:yyyy");
+        Transaction t1 = new Transaction(customer.getAccount(), customer2.getAccount(), 100.00F, true, LocalDate.parse("30:06:2022", fmt), LocalTime.now());
+        Transaction t2 = new Transaction(customer2.getAccount(), customer.getAccount(), 200.00F, true, LocalDate.parse("10:07:2022", fmt), LocalTime.now());
+        Transaction t3 = new Transaction(customer.getAccount(), customer2.getAccount(), 150.00F, true, LocalDate.parse("15:07:2022", fmt), LocalTime.now());
+        Transaction t4 = new Transaction(customer.getAccount(), customer2.getAccount(), 100.00F, true, LocalDate.parse("20:07:2022", fmt), LocalTime.now());
+
+        Account account = customer.getAccount();
+        Account account2 = customer2.getAccount();
+        account.addTransaction(t1);
+        account2.addTransaction(t1);
+
+        account.addTransaction(t2);
+        account2.addTransaction(t2);
+        
+        account.addTransaction(t3);
+        account2.addTransaction(t3);
+        
+        account.addTransaction(t4);
+        account2.addTransaction(t4);
     }
 
     public static void main(String[] args) throws IOException {
