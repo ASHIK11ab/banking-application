@@ -121,11 +121,10 @@ public abstract class Account {
 
 
     public void addTransaction(Transaction transaction) {
-        LocalDate today = LocalDate.now();
         LinkedList<Transaction> todayTransactions;
         
         // First transaction of today.
-        if(!this.transactions.containsKey(today)) {
+        if(!this.transactions.containsKey(transaction.date)) {
             todayTransactions = new LinkedList<Transaction>();
             todayTransactions.addFirst(transaction);
 
@@ -134,10 +133,10 @@ public abstract class Account {
             transactionPair.setFirst(todayTransactions);
             transactionPair.setSecond(this.recentTransactionDate);
 
-            this.transactions.put(today, transactionPair);
-            this.recentTransactionDate = today;
+            this.transactions.put(transaction.date, transactionPair);
+            this.recentTransactionDate = transaction.date;
         } else {
-            todayTransactions = this.transactions.get(today).getFirst();
+            todayTransactions = this.transactions.get(transaction.date).getFirst();
             todayTransactions.addFirst(transaction);
         }
     }
@@ -202,6 +201,11 @@ public abstract class Account {
             return new LinkedList<Transaction>();
         else
             return this.transactions.get(date).getFirst();
+    }
+
+
+    public LocalDate getRecentTransactionDate() {
+        return this.recentTransactionDate;
     }
     
 
