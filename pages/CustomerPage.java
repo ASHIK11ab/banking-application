@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Scanner;
 
 import ds.Pair;
@@ -46,7 +47,8 @@ public class CustomerPage {
             System.out.println("6. Your profile");
             System.out.println("7. Account details");
             System.out.println("8. History of transactions");
-            System.out.println("9. Logout");
+            System.out.println("9. Mini statement");
+            System.out.println("10. Logout");
             System.out.print("\nEnter choice: ");
             choice = sc.nextInt();
 
@@ -59,7 +61,8 @@ public class CustomerPage {
                 case 6: this.displayProfile(); break;
                 case 7: this.displayAccount(); break;
                 case 8: this.transactionHistory(); break;
-                case 9: proceed = 'n'; break;
+                case 9: this.miniStatement(); break;
+                case 10: proceed = 'n'; break;
             }
 
             System.out.print("\nPress enter to continue ... ");
@@ -342,6 +345,62 @@ public class CustomerPage {
 
         if(cnt == 0)
             System.out.println("\nNo transactions in given range.");
+    }
+
+
+    public void miniStatement() {
+        LinkedList<Transaction> transactions;
+        Account account = this.customer.getAccount();
+        ListIterator<Transaction> it;
+        Transaction transaction;
+        LocalDate date;
+        String nameToDisplay = "";
+        String type = "";
+        String transDate;
+        int cnt = 0;
+
+        System.out.println("\n---------------");
+        System.out.println("Mini Statement:");
+        System.out.println("---------------");
+        System.out.println("\nA/C No: " + account.getAccountNo());
+
+        date = account.getRecentTransactionDate();
+
+        outerLoop:
+        while(cnt < 10 && date != null) {
+            transactions = account.getTransactions(date);
+            it = transactions.listIterator(transactions.size());
+
+            while(it.hasPrevious()) {
+                transaction = (Transaction) it.previous();
+
+                // Skip failed transactions
+                if(!transaction.isSuccessfull)
+                    continue;
+                
+                if(cnt == 10)
+                    break outerLoop;
+
+                cnt++;
+                // Display reciever name for debit and sender name for credit transactions.
+                if(transaction.payerAccountNo.equals(account.getAccountNo())) {
+                    type = "Debit";
+                    nameToDisplay = Bank.getCustomer(Bank.getAccount(transaction.payeeAccountNo).getCustomerId()).getName();
+                }
+                else {
+                    type = "Credit";
+                    nameToDisplay = Bank.getCustomer(Bank.getAccount(transaction.payerAccountNo).getCustomerId()).getName();
+                }
+
+                transDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(transaction.date);
+                System.out.println(String.format("\n%d ) %s %s %6s %.2f", cnt, transDate, nameToDisplay, type, transaction.amount));
+            }
+
+            // Next recent transaction date.
+            date = account.getTransactions().get(date).getSecond();
+        }
+
+        System.out.println("\nAvailable Balance: " + account.getBalance());
     }
 
 
