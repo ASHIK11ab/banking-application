@@ -1,8 +1,14 @@
 package pages;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Scanner;
 
+import ds.Pair;
 import entities.Bank;
 import entities.Beneficiary;
 import entities.Transaction;
@@ -52,6 +58,7 @@ public class CustomerPage {
                 case 5: this.displayBeneficiaries(); break;
                 case 6: this.displayProfile(); break;
                 case 7: this.displayAccount(); break;
+                case 8: this.transactionHistory(); break;
                 case 9: proceed = 'n'; break;
             }
 
@@ -141,8 +148,8 @@ public class CustomerPage {
         }
         
         // Create transaction record.
-        transaction = new Transaction(customerAccount, beneficiaryAccount, 
-                                        amount, isSuccessfull);
+        transaction = new Transaction(customerAccount, beneficiaryAccount, amount,
+                                        isSuccessfull, LocalDate.now(), LocalTime.now());
         Bank.addTransaction(transaction);
 
         // Add transaction record to the involving branches.
@@ -157,7 +164,6 @@ public class CustomerPage {
 
         customerAccount.addTransaction(transaction);
         beneficiaryAccount.addTransaction(transaction);
-        System.out.println(customerAccount.getTransactions());
     }
 
 
@@ -237,6 +243,105 @@ public class CustomerPage {
         } else {
             System.out.println("\nInvalid beneficiary number !!!");
         }
+    }
+
+
+    // public void transactionHistory() {
+    //     Account account = this.customer.getAccount();
+    //     boolean proceed = false;
+    //     int choice;
+    //     int cnt = 0;
+    //     int transactionDisplayCnt;
+    //     LocalDate recentTransactionDate = account.getRecentTransactionDate();
+    //     LinkedList<Transaction> transactions;
+                
+    //     Scanner sc = new Scanner(System.in);
+
+    //     System.out.println("\nActions's:");
+    //     System.out.println("-------------------");
+    //     System.out.println("1. Last n transactions");
+    //     System.out.println("2. Last n debit transactions");
+    //     System.out.println("3. Last n credit transactions");
+    //     System.out.print("\nEnter choice: ");
+    //     choice = sc.nextInt();
+
+    //     System.out.print("Enter no of transactions to display: ");
+    //     transactionDisplayCnt = sc.nextInt();
+
+    //     LocalDate date = recentTransactionDate;
+
+    //     while(proceed == true && cnt < transactionDisplayCnt) {
+    //         transactions = account.getTransactions(date);
+
+    //         for(Transaction trans : transactions) {
+    //             if(cnt > transactionDisplayCnt)
+    //                 break;
+
+    //             switch(choice) {
+    //                 case 1: break;
+    //                 case 2: // Skip if not a debit transaction.
+    //                         if(trans.payerAccountNo != account.getAccountNo())
+    //                             continue;
+    //                 case 3: // Skip if not a debit transaction.
+    //                         if(trans.payeeAccountNo != account.getAccountNo())
+    //                             continue;
+    //             }
+
+    //             System.out.println(trans);
+    //         }
+
+    //         // Display next transactions when transactions on a date is over.
+    //         date = account.getTransactions().get(date).getSecond();
+    //     }
+    // }
+
+
+    public void transactionHistory() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        Account account = this.customer.getAccount();
+        LinkedList<Transaction> transactions;
+        LocalDate fromDate;
+        LocalDate toDate;
+        LocalDate date;
+        int cnt = 0;
+        
+        System.out.println("\nTransaction History:");
+        System.out.println("--------------------");
+        System.out.print("\nEnter from date (dd/mm/yyyy) : ");
+        fromDate = LocalDate.parse(System.console().readLine(), formatter);
+        System.out.print("Enter to date (dd/mm/yyyy)   : ");
+        toDate = LocalDate.parse(System.console().readLine(), formatter);
+
+        System.out.println("\n\nTransactions (" + formatter.format(fromDate) + ")" + " to (" + formatter.format(toDate) + "):");
+        System.out.println("------------------------------------------");
+        
+        date = fromDate;
+
+        while(date.isBefore(toDate) || date.isEqual(toDate)) {
+
+            // Move to next date if no transactions were made on a date.
+            if(!account.getTransactions().containsKey(date)) {
+                date = date.plusDays(1);
+                continue;
+            }
+
+            transactions = account.getTransactions().get(date).getFirst();
+
+            for(Transaction transaction : transactions) {
+                cnt++;
+                System.out.println("\n" + transaction);
+
+                if(transaction.payerAccountNo.equals(account.getAccountNo()))
+                    System.out.println("Type           : Debit");
+                else
+                    System.out.println("Type           : Credit");
+            }
+
+            date = date.plusDays(1);
+        }
+
+        if(cnt == 0)
+            System.out.println("\nNo transactions in given range.");
     }
 
 
