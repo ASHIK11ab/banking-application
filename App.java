@@ -18,7 +18,6 @@ import entities.account.Account;
 public class App {
     App() {
         Admin admin = new Admin("admin-user", "899879879");
-        admin._setUserId(111);
         admin.setPassword("admin");
 
         Bank.setAdmin(admin);
@@ -27,24 +26,21 @@ public class App {
         Bank.addBranch(branch);
 
         BranchManager manager = new BranchManager("Jason", "998757334", branch.getIFSC());
-        manager._setUserId(3);
         manager.setPassword("manager1");
         Bank.addManager(manager);
         manager.addToBranch(branch.getIFSC());
 
         Customer customer = new Customer("Test 1", "937957495", "savings", branch.getIFSC(), "ADPA94757", "489571973264");
-        customer._setUserId(1);
-        customer.setLoginPassword("test1");
-        customer.setTransPassword("test1@trans");
+        customer.setLoginPassword("test");
+        customer.setTransPassword("test@trans");
 
         Bank.addAccount(customer.getAccount());
         branch.addAccount(customer.getAccount().getAccountNo());
         Bank.addCustomer(customer);
 
         Customer customer2 = new Customer("Test 2", "21235874", "current", branch.getIFSC(), "QWT937432", "832935712347");
-        customer2._setUserId(2);
-        customer2.setLoginPassword("test2");
-        customer2.setTransPassword("test2@trans");
+        customer2.setLoginPassword("test");
+        customer2.setTransPassword("test@trans");
 
         Bank.addAccount(customer2.getAccount());
         branch.addAccount(customer2.getAccount().getAccountNo());

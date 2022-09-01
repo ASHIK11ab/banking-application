@@ -126,7 +126,7 @@ public abstract class Account {
         // First transaction of today.
         if(!this.transactions.containsKey(transaction.date)) {
             todayTransactions = new LinkedList<Transaction>();
-            todayTransactions.addFirst(transaction);
+            todayTransactions.addLast(transaction);
 
             Pair<LinkedList<Transaction>, LocalDate> transactionPair = 
                 new Pair<LinkedList<Transaction>, LocalDate>();
@@ -137,7 +137,7 @@ public abstract class Account {
             this.recentTransactionDate = transaction.date;
         } else {
             todayTransactions = this.transactions.get(transaction.date).getFirst();
-            todayTransactions.addFirst(transaction);
+            todayTransactions.addLast(transaction);
         }
     }
 
