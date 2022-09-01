@@ -3,19 +3,17 @@ package pages;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Scanner;
 
-import ds.Pair;
 import entities.Bank;
 import entities.Beneficiary;
 import entities.Transaction;
 import entities.account.Account;
 import entities.users.Customer;
 
+import views.CustomerView;
 
 public class CustomerPage {
     private final Customer customer;
@@ -37,29 +35,20 @@ public class CustomerPage {
         Scanner sc = new Scanner(System.in);
 
         while(proceed == 'y') {
-            System.out.println("\nActions:");
-            System.out.println("-------------------");
-            System.out.println("1. Fund Transfer");
-            System.out.println("2. Balance enquiry");
-            System.out.println("3. Add beneficiary");
-            System.out.println("4. Remove beneficiary");
-            System.out.println("5. All beneficiaries");
-            System.out.println("6. Your profile");
-            System.out.println("7. Account details");
-            System.out.println("8. History of transactions");
-            System.out.println("9. Mini statement");
-            System.out.println("10. Logout");
-            System.out.print("\nEnter choice: ");
-            choice = sc.nextInt();
+            choice = CustomerView.displayActions();
 
             switch(choice) {
                 case 1: this.fundTransfer(); break;
-                case 2: this.displayBalance(); break;
-                case 3: this.addBeneficiary(); break;
-                case 4: this.removeBeneficiary(); break;
-                case 5: this.displayBeneficiaries(); break;
-                case 6: this.displayProfile(); break;
-                case 7: this.displayAccount(); break;
+                case 2: this.addBeneficiary(); break;
+                case 3: this.removeBeneficiary(); break;
+                case 4: CustomerView.displayBalance(this.customer.getAccount());
+                        break;
+                case 5: CustomerView.displayBeneficiaries(this.customer.getAccount().getBeneficiaries()); 
+                        break;
+                case 6: CustomerView.displayProfile(this.customer);
+                        break;
+                case 7: CustomerView.displayAccount(this.customer.getAccount());
+                        break;
                 case 8: this.transactionHistory(); break;
                 case 9: this.miniStatement(); break;
                 case 10: proceed = 'n'; break;
@@ -98,7 +87,7 @@ public class CustomerPage {
         beneficiaryNo = sc.nextInt();
 
         if(beneficiaryNo == 0) {
-            this.displayBeneficiaries();
+            CustomerView.displayBeneficiaries(this.customer.getAccount().getBeneficiaries());
             System.out.print("\nEnter beneficiary no: ");
             beneficiaryNo = sc.nextInt();
         }
@@ -235,7 +224,8 @@ public class CustomerPage {
 
         Scanner sc = new Scanner(System.in);
 
-        this.displayBeneficiaries();
+        CustomerView.displayBeneficiaries(this.customer.getAccount().getBeneficiaries());
+
         System.out.println();
         System.out.print("Enter beneficiary number to remove: ");
         index = sc.nextInt();
@@ -247,56 +237,6 @@ public class CustomerPage {
             System.out.println("\nInvalid beneficiary number !!!");
         }
     }
-
-
-    // public void transactionHistory() {
-    //     Account account = this.customer.getAccount();
-    //     boolean proceed = false;
-    //     int choice;
-    //     int cnt = 0;
-    //     int transactionDisplayCnt;
-    //     LocalDate recentTransactionDate = account.getRecentTransactionDate();
-    //     LinkedList<Transaction> transactions;
-                
-    //     Scanner sc = new Scanner(System.in);
-
-    //     System.out.println("\nActions's:");
-    //     System.out.println("-------------------");
-    //     System.out.println("1. Last n transactions");
-    //     System.out.println("2. Last n debit transactions");
-    //     System.out.println("3. Last n credit transactions");
-    //     System.out.print("\nEnter choice: ");
-    //     choice = sc.nextInt();
-
-    //     System.out.print("Enter no of transactions to display: ");
-    //     transactionDisplayCnt = sc.nextInt();
-
-    //     LocalDate date = recentTransactionDate;
-
-    //     while(proceed == true && cnt < transactionDisplayCnt) {
-    //         transactions = account.getTransactions(date);
-
-    //         for(Transaction trans : transactions) {
-    //             if(cnt > transactionDisplayCnt)
-    //                 break;
-
-    //             switch(choice) {
-    //                 case 1: break;
-    //                 case 2: // Skip if not a debit transaction.
-    //                         if(trans.payerAccountNo != account.getAccountNo())
-    //                             continue;
-    //                 case 3: // Skip if not a debit transaction.
-    //                         if(trans.payeeAccountNo != account.getAccountNo())
-    //                             continue;
-    //             }
-
-    //             System.out.println(trans);
-    //         }
-
-    //         // Display next transactions when transactions on a date is over.
-    //         date = account.getTransactions().get(date).getSecond();
-    //     }
-    // }
 
 
     public void transactionHistory() {
@@ -406,45 +346,5 @@ public class CustomerPage {
         }
 
         System.out.println("\nAvailable Balance: " + account.getBalance());
-    }
-
-
-    public void displayBeneficiaries() {
-        ArrayList<Beneficiary> beneficiaries = this.customer.getAccount().getBeneficiaries();
-        
-        if(beneficiaries.size() == 0) {
-            System.out.println("\nNo beneficiaries added !!!");
-            return;
-        }
-
-        int counter = 1;
-        System.out.println("\nBeneficiaries:");
-        System.out.println("--------------");
-        for(Beneficiary beneficiary : beneficiaries) {
-            System.out.println("Beneficiary No : " + counter);
-            System.out.println(beneficiary);
-            counter++;
-        }
-    }
-
-
-    public void displayProfile() {
-        System.out.println("\nProfile:");
-        System.out.println("-------------");
-        System.out.println(this.customer);
-    }
-
-
-    public void displayAccount() {
-        System.out.println("\nAccount Details:");
-        System.out.println("---------------------");
-        System.out.println(this.customer.getAccount());
-    }
-
-    
-    public void displayBalance() {
-        System.out.println("\nBalance: ");
-        System.out.println("--------"); 
-        System.out.println(this.customer.getAccount().getBalance());
     }
 }
