@@ -306,6 +306,7 @@ public class CustomerPage {
         LocalDate fromDate;
         LocalDate toDate;
         LocalDate date;
+        String status;
         int cnt = 0;
         
         System.out.println("\nTransaction History:");
@@ -338,6 +339,10 @@ public class CustomerPage {
                     System.out.println("Type           : Debit");
                 else
                     System.out.println("Type           : Credit");
+
+                status = (transaction.isSuccessfull) ? "Successfull" : "Failed";
+
+                System.out.println("Status         : " + status);
             }
 
             date = date.plusDays(1);

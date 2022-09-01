@@ -43,8 +43,6 @@ public class Transaction {
         repr += "Payer A/C No   : " + this.payerAccountNo + "\n";
         repr += "Payee A/C No   : " + this.payeeAccountNo + "\n";
         repr += "Amount         : " + this.amount + "\n";
-        // repr += "Date           : " + this.date + "\n";
-        // repr += "Time           : " + this.time;
         repr += "Date & Time    : " + fmt.format(dateTime);
         return repr;
     }
