@@ -78,7 +78,7 @@ public class CustomerPage {
 
         if(customerAccount.getBeneficiaries().size() == 0) {
             System.out.println("\nNo beneficiaries added !!!");
-            System.out.println("Add beneficiaries to transer funds !!!");
+            System.out.println("Add beneficiaries to transfer funds !!!");
             return;
         }
 
@@ -93,6 +93,13 @@ public class CustomerPage {
             beneficiaryNo = sc.nextInt();
         }
 
+        // Validate beneficiary account.
+        if(!(beneficiaryNo > 0 && 
+                beneficiaryNo <= customerAccount.getBeneficiaries().size()) ) {
+            System.out.println("\n\nInvalid Beneficiary no !!!");
+            return;
+        }
+
         System.out.print("\nEnter amount to transfer: ");
         amount = sc.nextFloat();
         System.out.print("\nEnter transaction password: ");
@@ -101,13 +108,6 @@ public class CustomerPage {
         // Validate transaction password.
         if(!customerAccount.isTransPasswordEqual(transPassword)) {
             System.out.println("\n\nIncorrect transaction password");
-            return;
-        }
-        
-        // Validate beneficiary account.
-        if(!(beneficiaryNo > 0 && 
-                beneficiaryNo <= customerAccount.getBeneficiaries().size()) ) {
-            System.out.println("\n\nInvalid Beneficiary no !!!");
             return;
         }
 
