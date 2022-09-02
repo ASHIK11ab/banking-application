@@ -21,10 +21,6 @@ public class Branch {
         return String.format("YESB0%06d", _counter);
     }
 
-    public boolean isAccountExists(String accountNo) {
-        return this.accounts.contains(accountNo);
-    }
-
     public void addAccount(String accountNo) {
         this.accounts.add(accountNo);
     }

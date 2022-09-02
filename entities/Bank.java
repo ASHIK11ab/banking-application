@@ -37,7 +37,7 @@ public class Bank {
         return Bank.branches.get(IFSC);
     }
 
-    public static Transaction getTransaction(int transactionId) {
+    public static Transaction getTransaction(Long transactionId) {
         return Bank.transactions.get(transactionId);
     }
 

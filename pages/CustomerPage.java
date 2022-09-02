@@ -179,6 +179,11 @@ public class CustomerPage {
             return;
         }
 
+        if(accountNo.equals(this.customer.getAccount().getAccountNo())) {
+            System.out.println("\nCannot add yourself as beneficiary !!!");
+            return;
+        }
+
         // Verify account details.
         Account account = Bank.getAccount(accountNo);
         if(account == null) {

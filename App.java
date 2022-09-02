@@ -57,15 +57,19 @@ public class App {
         Account account2 = customer2.getAccount();
         account.addTransaction(t1);
         account2.addTransaction(t1);
+        Bank.addTransaction(t1);
 
         account.addTransaction(t2);
         account2.addTransaction(t2);
+        Bank.addTransaction(t2);
         
         account.addTransaction(t3);
         account2.addTransaction(t3);
+        Bank.addTransaction(t3);
         
         account.addTransaction(t4);
         account2.addTransaction(t4);
+        Bank.addTransaction(t4);
     }
 
     public static void main(String[] args) throws IOException {
