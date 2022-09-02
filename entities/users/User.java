@@ -4,23 +4,17 @@ import java.util.Random;
 
 public class User {
     private static int _counter = 10000000;
-    // id is final, for testing purposes made as not final.
-    private int id;
+    private final int id;
     private String name;
-    private String DOB;
     private String password;
     private String phone;
 
     public User(String name, String phone) {
         User._counter++;
-        this.id = genUserId();
+        this.id = User._counter;
         this.name = name;
         this.password = genPassword();
         this.phone = phone;
-    }
-
-    private int genUserId() {
-        return User._counter;
     }
 
     private String genPassword() {
@@ -44,10 +38,6 @@ public class User {
         return this.id;
     }
 
-    public String getDOB() {
-        return this.DOB;
-    }
-
     public String getName() {
         return this.name;
     }
@@ -57,16 +47,8 @@ public class User {
     }
 
     // Setters
-    public void _setUserId(int id) {
-        this.id = id;
-    }
-
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setDOB(String DOB) {
-        this.DOB = DOB;
     }
 
     public void setPhone(String phone) {

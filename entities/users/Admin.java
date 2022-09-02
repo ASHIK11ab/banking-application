@@ -7,11 +7,10 @@ public class Admin extends User {
 
     public String toString() {
         String repr = "";
-        repr += "Name: " + this.getName() + "\n";
-        repr += "Role: Bank Admin" + "\n";
-        repr += "Id: " + this.getId() + "\n";
-        repr += "Phone: " + this.getPhone() + "\n";
-        repr += "DOB: " + this.getDOB() + "\n";
+        repr += "Name        : " + this.getName() + "\n";
+        repr += "Role        : Bank Admin" + "\n";
+        repr += "Id          : " + this.getId() + "\n";
+        repr += "Phone       : " + this.getPhone() + "\n";
         return repr;
     }
 }

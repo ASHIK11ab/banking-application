@@ -19,17 +19,6 @@ public class Customer extends User {
         this.ADHAAR = ADHAAR;
     }
 
-    public String toString() {
-        String repr = "";
-        repr += "Name        : " + this.getName() + "\n";
-        repr += "Customer id : " + this.getId() + "\n";
-        repr += "Phone       : " + this.getPhone() + "\n";
-        repr += "DOB         : " + this.getDOB() + "\n";
-        repr += "PAN No      : " + this.getPAN() + "\n";
-        repr += "ADHAAR No   : " + this.getADHAAR() + "\n";
-        return repr;
-    }
-
     // Getters
     // Use account reference to access account's attributes.
     public Account getAccount() {
@@ -59,5 +48,15 @@ public class Customer extends User {
 
     public void setTransPassword(String password) {
         this.getAccount().setTransPassword(password);
+    }
+
+    public String toString() {
+        String repr = "";
+        repr += "Name        : " + this.getName() + "\n";
+        repr += "Customer id : " + this.getId() + "\n";
+        repr += "Phone       : " + this.getPhone() + "\n";
+        repr += "PAN No      : " + this.getPAN() + "\n";
+        repr += "ADHAAR No   : " + this.getADHAAR() + "\n";
+        return repr;
     }
 }
