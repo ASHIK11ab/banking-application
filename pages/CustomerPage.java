@@ -8,6 +8,7 @@ import java.util.ListIterator;
 import java.util.Scanner;
 
 import entities.Bank;
+import entities.Branch;
 import entities.Beneficiary;
 import entities.Transaction;
 import entities.account.Account;
@@ -145,14 +146,14 @@ public class CustomerPage {
         Bank.addTransaction(transaction);
 
         // Add transaction record to the involving branches.
-        // Branch payerBranch = Bank.getBranch(customerAccount.getBranchIFSC());
-        // Branch payeeBranch = Bank.getBranch(beneficiaryAccount.getBranchIFSC());
-        // if(payerBranch == payeeBranch)
-        //     payerBranch.addTransaction(transaction);
-        // else {
-        //     payerBranch.addTransaction(transaction);
-        //     payeeBranch.addTransaction(transaction);
-        // }
+        Branch payerBranch = Bank.getBranch(customerAccount.getBranchIFSC());
+        Branch payeeBranch = Bank.getBranch(beneficiaryAccount.getBranchIFSC());
+        if(payerBranch == payeeBranch)
+            payerBranch.addTransactionId(transaction);
+        else {
+            payerBranch.addTransactionId(transaction);
+            payeeBranch.addTransactionId(transaction);
+        }
 
         customerAccount.addTransaction(transaction);
         beneficiaryAccount.addTransaction(transaction);
