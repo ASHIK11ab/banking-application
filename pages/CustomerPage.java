@@ -102,8 +102,9 @@ public class CustomerPage {
 
         System.out.print("\nEnter amount to transfer: ");
         amount = sc.nextFloat();
+        sc.nextLine();
         System.out.print("\nEnter transaction password: ");
-        transPassword = System.console().readLine();
+        transPassword = sc.nextLine();
 
         // Validate transaction password.
         if(!customerAccount.isTransPasswordEqual(transPassword)) {
@@ -165,15 +166,16 @@ public class CustomerPage {
         String confirmAccountNo;
         String name;
         char beneficiaryConfirmation = 'n';
+        Scanner sc = new Scanner(System.in);
         
         System.out.println("\nAdd Beneficiary:");
         System.out.println("----------------");
         System.out.print("\nEnter account no: ");
-        accountNo = System.console().readLine();
+        accountNo = sc.nextLine();
         System.out.print("Confirm account no: ");
-        confirmAccountNo = System.console().readLine();
+        confirmAccountNo = sc.nextLine();
         System.out.print("Beneficiary name: ");
-        name = System.console().readLine();
+        name = sc.nextLine();
 
         if(!accountNo.equals(confirmAccountNo)) {
             System.out.println("\nAccount no does not match !!!");
@@ -204,7 +206,7 @@ public class CustomerPage {
         System.out.println("Account No   : " + account.getAccountNo());
         System.out.println("IFSC Code    : " + account.getBranchIFSC());
         System.out.print("\nProceed to adding beneficiary (y/n): ");
-        beneficiaryConfirmation = System.console().readLine().toLowerCase().charAt(0);
+        beneficiaryConfirmation = sc.next().toLowerCase().charAt(0);
 
         if(beneficiaryConfirmation == 'n')
             return;
@@ -255,13 +257,15 @@ public class CustomerPage {
         LocalDate date;
         String status;
         int cnt = 0;
+
+        Scanner sc = new Scanner(System.in);
         
         System.out.println("\nTransaction History:");
         System.out.println("--------------------");
         System.out.print("\nEnter from date (dd/mm/yyyy) : ");
-        fromDate = LocalDate.parse(System.console().readLine(), formatter);
+        fromDate = LocalDate.parse(sc.nextLine(), formatter);
         System.out.print("Enter to date (dd/mm/yyyy)   : ");
-        toDate = LocalDate.parse(System.console().readLine(), formatter);
+        toDate = LocalDate.parse(sc.nextLine(), formatter);
 
         System.out.println("\n\nTransactions (" + formatter.format(fromDate) + ")" + " to (" + formatter.format(toDate) + "):");
         System.out.println("------------------------------------------");

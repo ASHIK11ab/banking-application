@@ -1,9 +1,7 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Scanner;
 
 import entities.Bank;
 import entities.users.Admin;
@@ -19,7 +17,6 @@ public class App {
     App() {
         Admin admin = new Admin("admin-user", "899879879");
         admin.setPassword("admin");
-
         Bank.setAdmin(admin);
 
         Branch branch = new Branch("Poonamallee");
@@ -75,11 +72,9 @@ public class App {
         branch.addTransactionId(t4);
         account.addTransaction(t4);
         account2.addTransaction(t4);
-
-        System.out.println(branch.transactionIds);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         App app = new App();
         System.out.println("\nWelcome to 'YOUR' bank");
         System.out.println("----------------------\n");
@@ -87,12 +82,12 @@ public class App {
     }
 
     
-    public void login() throws IOException {
+    public void login() {
         int choice = 0;
         int userId;
         String password;
         User user = null;        
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        Scanner sc = new Scanner(System.in);
 
         while(choice != 4) {
             System.out.println("\nMenu's:");
@@ -102,7 +97,7 @@ public class App {
             System.out.println("3. Customer Login");
             System.out.println("4. Exit");
             System.out.print("\nEnter choice: ");
-            choice = Integer.parseInt(reader.readLine());
+            choice = sc.nextInt();
 
             if(choice == 4)
                 continue;
@@ -113,10 +108,11 @@ public class App {
             }
 
             System.out.print("\nEnter user id: ");
-            userId = Integer.parseInt(reader.readLine());
+            userId = sc.nextInt();
+            sc.nextLine();
 
             System.out.print("Enter password: ");
-            password = reader.readLine();
+            password = sc.nextLine();
 
             switch(choice) {
                 case 1: user = (User) Bank.getAdmin(); break;
@@ -130,20 +126,16 @@ public class App {
             if(user != null && user.getId() == userId && user.isPasswordEqual(password)) {
                 System.out.println("\nLogin successfull");
                 System.out.print("\nPress enter to continue ... ");
-                reader.readLine();
+                System.console().readLine();
 
                 switch(choice) {
-                    // case 1: page = new AdminPage(user.getId());
-                    //         page.dashboard(); break;
-                    // case 2: page = new ManagerPage(user.getId());
-                    //         page.dashboard(); break;
                     case 3: CustomerPage customerPage = new CustomerPage(user.getId());
                             customerPage.dashboard(); break;
                 }
             } else {
                 System.out.println("Invalid user id or password !!!");
                 System.out.print("\nPress enter to continue ... ");
-                reader.readLine();
+                System.console().readLine();
             }
         }
     }
