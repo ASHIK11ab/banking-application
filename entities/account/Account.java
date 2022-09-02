@@ -15,14 +15,13 @@ public abstract class Account {
     private static int _counter = 100000;
     private final String accountNo;
     private final int customerId;
+    private float balance;
     private boolean isActive;
     private String branchIFSC;
     private String type;
-    private float balance;
     private String transPassword;
     private ArrayList<Beneficiary> beneficiaries;
-    // Stores account numbers of the added beneficiaries.
-    private HashSet<String> beneficiaryAccounts;
+    private HashSet<String> beneficiaryAccounts; // Stores account numbers of the added beneficiaries.
     private LocalDate recentTransactionDate;
     private HashMap<LocalDate, Pair<LinkedList<Long>, LocalDate>> transactionIds;
 
@@ -43,11 +42,12 @@ public abstract class Account {
         // Transactions are indexed by transaction date, its value is a 'Pair'.
         // The pair contains list of transaction ids on a date and the date of the
         // transaction prior to the current date's transaction.
-        // Previous date is used for efficiently iterating transactions over a
-        // given date range.
+        // Previous date is used for efficiently iterating transactions in the
+        // recent to oldest order.
         this.transactionIds = 
             new HashMap<LocalDate, Pair<LinkedList<Long>, LocalDate>>();
     }
+
 
     public abstract int isTransactionValid(float amount);
 
@@ -79,47 +79,8 @@ public abstract class Account {
         return pass;
     }
 
-
-    public void activate() {
-        this.isActive = true;
-    }
-
-
-    public void deactivate() {
-        this.isActive = false;
-    }
-
-
-    public void credit(float amount) {
-        this.balance += amount;
-    }
-
-
-    public void debit(float amount) {
-        this.balance -= amount;
-    }
-
     
-    // Adds a beneficiary to this account.
-    public void addBeneficiary(Beneficiary beneficiary) {
-        this.beneficiaryAccounts.add(beneficiary.getAccountNo());
-        this.beneficiaries.add(beneficiary);
-    }
-
-
-    public boolean isBeneficiaryExists(String accountNo) {
-        return this.beneficiaryAccounts.contains(accountNo);
-    }
-
-
-    // Removes a beneficiary.
-    public void removeBeneficiary(int index) {
-        String removedAccountNo = this.beneficiaries.get(index).getAccountNo();
-        this.beneficiaryAccounts.remove(removedAccountNo);
-        this.beneficiaries.remove(index);
-    }
-
-
+    // Adds a transaction id to this account.
     public void addTransaction(Transaction transaction) {
         LinkedList<Long> todayTransactionIds;
         
@@ -143,59 +104,53 @@ public abstract class Account {
     }
 
 
+    // Adds a beneficiary to this account.
+    public void addBeneficiary(Beneficiary beneficiary) {
+        this.beneficiaryAccounts.add(beneficiary.getAccountNo());
+        this.beneficiaries.add(beneficiary);
+    }
+
+
+    // Removes a beneficiary.
+    public void removeBeneficiary(int index) {
+        String removedAccountNo = this.beneficiaries.get(index).getAccountNo();
+        this.beneficiaryAccounts.remove(removedAccountNo);
+        this.beneficiaries.remove(index);
+    }
+
+
+    public boolean isBeneficiaryExists(String accountNo) {
+        return this.beneficiaryAccounts.contains(accountNo);
+    }
+
+
+    public void credit(float amount) {
+        this.balance += amount;
+    }
+
+    public void debit(float amount) {
+        this.balance -= amount;
+    }
+
+    public void activate() {
+        this.isActive = true;
+    }
+
+    public void deactivate() {
+        this.isActive = false;
+    }
+
     public boolean isTransPasswordEqual(String password) {
         return this.transPassword.equals(password);
     }
 
-
-    public boolean isActive() {
-        return this.isActive;
-    }
-
-
     // Getters
-    public String getAccountNo() {
-        return this.accountNo;
-    }
-
-
-    public String getType() {
-        return this.type;
-    }
-
-
-    public int getCustomerId() {
-        return this.customerId;
-    }
-
-
-    public float getBalance() {
-        return this.balance;
-    }
-
-
-    public String getBranchIFSC() {
-        return this.branchIFSC;
-    }
-
-
-    public ArrayList<Beneficiary> getBeneficiaries() {
-        return this.beneficiaries;
-    }
-
-
-    // Returns a added beneficiary.
-    public Beneficiary getBeneficiary(int index) {
-        return this.beneficiaries.get(index);
-    }
-
-
     // Returns all transactions of this account.
     public HashMap<LocalDate, Pair<LinkedList<Long>, LocalDate>> getTransactionIdMap() {
         return this.transactionIds;
     }
 
-
+    
     // Returns all transaction ids of this account on a given date.
     public LinkedList<Long> getTransactionIds(LocalDate date) {
         if(!this.transactionIds.containsKey(date))
@@ -204,16 +159,46 @@ public abstract class Account {
             return this.transactionIds.get(date).getFirst();
     }
 
+    public boolean isActive() {
+        return this.isActive;
+    }
+
+    public String getAccountNo() {
+        return this.accountNo;
+    }
+
+    public String getType() {
+        return this.type;
+    }
+
+    public int getCustomerId() {
+        return this.customerId;
+    }
+
+    public float getBalance() {
+        return this.balance;
+    }
+
+    public String getBranchIFSC() {
+        return this.branchIFSC;
+    }
+
+    public ArrayList<Beneficiary> getBeneficiaries() {
+        return this.beneficiaries;
+    }
+
+    // Returns a added beneficiary.
+    public Beneficiary getBeneficiary(int index) {
+        return this.beneficiaries.get(index);
+    }
 
     public LocalDate getRecentTransactionDate() {
         return this.recentTransactionDate;
     }
-    
 
     public void setTransPassword(String pass) {
         this.transPassword = pass;
     }
-
 
     public String toString() {
         String repr = "";

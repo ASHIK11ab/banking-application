@@ -7,13 +7,11 @@ import entities.Bank;
 import entities.Transaction;
 
 public class SavingsAccount extends Account {
-    private static float depositIntrestRate;
     private float dailyLimit;
 
     public SavingsAccount(int customerId, String IFSC) {
         super(customerId, IFSC, "savings");
-        SavingsAccount.depositIntrestRate = 0.035F;
-        this.dailyLimit = 800.0F;
+        this.dailyLimit = 1000.0F;
     }
 
 
@@ -56,18 +54,6 @@ public class SavingsAccount extends Account {
     public float getDailyLimit() {
         return this.dailyLimit;
     }
-
-
-    public float getIntrestRate() {
-        return SavingsAccount.depositIntrestRate;
-    }
-
-
-    // Setter
-    public void setIntrestRate(float intrestRate) {
-        SavingsAccount.depositIntrestRate = intrestRate;
-    }
-
 
     public void setDailyLimit(float limit) {
         this.dailyLimit = limit;
