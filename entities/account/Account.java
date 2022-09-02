@@ -24,7 +24,7 @@ public abstract class Account {
     // Stores account numbers of the added beneficiaries.
     private HashSet<String> beneficiaryAccounts;
     private LocalDate recentTransactionDate;
-    private HashMap<LocalDate, Pair<LinkedList<Transaction>, LocalDate>> transactions;
+    private HashMap<LocalDate, Pair<LinkedList<Long>, LocalDate>> transactionIds;
 
 
     Account(int customerId, String IFSC, String type) {
@@ -41,12 +41,12 @@ public abstract class Account {
         this.recentTransactionDate = null;
 
         // Transactions are indexed by transaction date, its value is a 'Pair'.
-        // The pair contains list of transactions on a date and the date of the
+        // The pair contains list of transaction ids on a date and the date of the
         // transaction prior to the current date's transaction.
         // Previous date is used for efficiently iterating transactions over a
         // given date range.
-        this.transactions = 
-            new HashMap<LocalDate, Pair<LinkedList<Transaction>, LocalDate>>();
+        this.transactionIds = 
+            new HashMap<LocalDate, Pair<LinkedList<Long>, LocalDate>>();
     }
 
     public abstract int isTransactionValid(float amount);
@@ -121,23 +121,24 @@ public abstract class Account {
 
 
     public void addTransaction(Transaction transaction) {
-        LinkedList<Transaction> todayTransactions;
+        LinkedList<Long> todayTransactionIds;
         
         // First transaction of today.
-        if(!this.transactions.containsKey(transaction.date)) {
-            todayTransactions = new LinkedList<Transaction>();
-            todayTransactions.addLast(transaction);
+        if(!this.transactionIds.containsKey(transaction.date)) {
+            todayTransactionIds = new LinkedList<Long>();
+            todayTransactionIds.addLast(transaction.id);
 
-            Pair<LinkedList<Transaction>, LocalDate> transactionPair = 
-                new Pair<LinkedList<Transaction>, LocalDate>();
-            transactionPair.setFirst(todayTransactions);
+            Pair<LinkedList<Long>, LocalDate> transactionPair = 
+                new Pair<LinkedList<Long>, LocalDate>();
+
+            transactionPair.setFirst(todayTransactionIds);
             transactionPair.setSecond(this.recentTransactionDate);
 
-            this.transactions.put(transaction.date, transactionPair);
+            this.transactionIds.put(transaction.date, transactionPair);
             this.recentTransactionDate = transaction.date;
         } else {
-            todayTransactions = this.transactions.get(transaction.date).getFirst();
-            todayTransactions.addLast(transaction);
+            todayTransactionIds = this.transactionIds.get(transaction.date).getFirst();
+            todayTransactionIds.addLast(transaction.id);
         }
     }
 
@@ -190,17 +191,17 @@ public abstract class Account {
 
 
     // Returns all transactions of this account.
-    public HashMap<LocalDate, Pair<LinkedList<Transaction>, LocalDate>> getTransactions() {
-        return this.transactions;
+    public HashMap<LocalDate, Pair<LinkedList<Long>, LocalDate>> getTransactionIdMap() {
+        return this.transactionIds;
     }
 
 
-    // Returns all transactions of this account on a given date.
-    public LinkedList<Transaction> getTransactions(LocalDate date) {
-        if(this.transactions.get(date) == null)
-            return new LinkedList<Transaction>();
+    // Returns all transaction ids of this account on a given date.
+    public LinkedList<Long> getTransactionIds(LocalDate date) {
+        if(!this.transactionIds.containsKey(date))
+            return new LinkedList<Long>();
         else
-            return this.transactions.get(date).getFirst();
+            return this.transactionIds.get(date).getFirst();
     }
 
 

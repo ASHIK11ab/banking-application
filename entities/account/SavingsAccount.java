@@ -3,6 +3,7 @@ package entities.account;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
+import entities.Bank;
 import entities.Transaction;
 
 public class SavingsAccount extends Account {
@@ -20,7 +21,8 @@ public class SavingsAccount extends Account {
     public int isTransactionValid(float amount) {
         LocalDate today;
         float totalAmountDebited;
-        LinkedList<Transaction> todayTransactions;
+        LinkedList<Long> todayTransactionIds;
+        Transaction transaction;
         
         // Insufficient balance.
         if(amount > this.getBalance())
@@ -28,16 +30,17 @@ public class SavingsAccount extends Account {
 
         // Ensure transaction within allowed daily limit.
         today = LocalDate.now();
-        todayTransactions = this.getTransactions(today);
+        todayTransactionIds = this.getTransactionIds(today);
         totalAmountDebited = 0;
 
         // Find the total amount transferred from this 
         // account (Debit transactions).
-        for(Transaction trans : todayTransactions) {
+        for(Long transId : todayTransactionIds) {
+            transaction = Bank.getTransaction(transId);
+
             // Successfull debit transaction
-            if(trans.payerAccountNo == this.getAccountNo() &&
-                trans.isSuccessfull)
-                totalAmountDebited += trans.amount;
+            if(transaction.payerAccountNo == this.getAccountNo() && transaction.isSuccessfull)
+                totalAmountDebited += transaction.amount;
         }
 
         // Ensure maximum daily limit is not exceeded.

@@ -242,7 +242,8 @@ public class CustomerPage {
     public void transactionHistory() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         Account account = this.customer.getAccount();
-        LinkedList<Transaction> transactions;
+        LinkedList<Long> transactionIds;
+        Transaction transaction;
         LocalDate fromDate;
         LocalDate toDate;
         LocalDate date;
@@ -264,14 +265,15 @@ public class CustomerPage {
         while(date.isBefore(toDate) || date.isEqual(toDate)) {
 
             // Move to next date if no transactions were made on a date.
-            if(!account.getTransactions().containsKey(date)) {
+            if(!account.getTransactionIdMap().containsKey(date)) {
                 date = date.plusDays(1);
                 continue;
             }
 
-            transactions = account.getTransactions().get(date).getFirst();
+            transactionIds = account.getTransactionIds(date);
 
-            for(Transaction transaction : transactions) {
+            for(Long transId : transactionIds) {
+                transaction = Bank.getTransaction(transId);
                 cnt++;
                 System.out.println("\n" + transaction);
 
@@ -294,10 +296,10 @@ public class CustomerPage {
 
 
     public void miniStatement() {
-        LinkedList<Transaction> transactions;
         Account account = this.customer.getAccount();
-        ListIterator<Transaction> it;
+        LinkedList<Long> transactionIds;
         Transaction transaction;
+        ListIterator<Long> it;
         LocalDate date;
         String nameToDisplay = "";
         String type = "";
@@ -313,11 +315,11 @@ public class CustomerPage {
 
         outerLoop:
         while(cnt < 10 && date != null) {
-            transactions = account.getTransactions(date);
-            it = transactions.listIterator(transactions.size());
+            transactionIds = account.getTransactionIds(date);
+            it = transactionIds.listIterator(transactionIds.size());
 
             while(it.hasPrevious()) {
-                transaction = (Transaction) it.previous();
+                transaction = Bank.getTransaction(it.previous());
 
                 // Skip failed transactions
                 if(!transaction.isSuccessfull)
@@ -342,7 +344,7 @@ public class CustomerPage {
             }
 
             // Next recent transaction date.
-            date = account.getTransactions().get(date).getSecond();
+            date = account.getTransactionIdMap().get(date).getSecond();
         }
 
         System.out.println("\nAvailable Balance: " + account.getBalance());
