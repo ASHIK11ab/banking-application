@@ -12,9 +12,9 @@ public class Branch {
     private final String IFSC;
     private String name;
     private int managerId;
-    private LocalDate recentTransactionDate;
     private LinkedHashSet<String> accounts;
-    public HashMap<LocalDate, Pair<LinkedList<Long>, LocalDate>> transactionIds;
+    private LocalDate recentTransactionDate;
+    private HashMap<LocalDate, Pair<LinkedList<Long>, LocalDate>> transactionIds;
 
     public Branch(String name) {
         Branch._counter++;
@@ -61,6 +61,10 @@ public class Branch {
 
     public void addAccount(String accountNo) {
         this.accounts.add(accountNo);
+    }
+
+    public void removeManager() {
+        this.managerId = -1;
     }
 
     // Getters

@@ -14,10 +14,6 @@ public class Pair<T1, T2> {
         this.second = element2;
     }
 
-    public String toString() {
-        return "<" + this.first + ", " + this.second + ">";
-    }
-
     // Getters
     public T1 getFirst() {
         return this.first;
@@ -34,5 +30,9 @@ public class Pair<T1, T2> {
 
     public void setSecond(T2 element) {
         this.second = element;
+    }
+
+    public String toString() {
+        return "<" + this.first + ", " + this.second + ">";
     }
 }
