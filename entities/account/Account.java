@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import entities.Bank;
 import entities.Beneficiary;
 import entities.Transaction;
 import ds.Pair;
@@ -201,6 +202,11 @@ public abstract class Account {
         return this.recentTransactionDate;
     }
 
+    // Setters
+    public void setIFSC(String IFSC) {
+        this.branchIFSC = IFSC;
+    }
+
     public void setTransPassword(String pass) {
         this.transPassword = pass;
     }
@@ -209,8 +215,8 @@ public abstract class Account {
         String repr = "";
         repr += "Account No   : " + this.getAccountNo() + "\n";
         repr += "IFSC Code    : " + this.getBranchIFSC() + "\n";
+        repr += "Branch Name  : " + Bank.getBranch(this.getBranchIFSC()).getName() + "\n";
         repr += "Account type : " + this.getType() + "\n";
-        repr += "Balance      : " + this.getBalance() + "\n";
         return repr;
     }
 }

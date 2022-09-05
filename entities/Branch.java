@@ -12,6 +12,7 @@ public class Branch {
     private String name;
     private int managerId;
     private LinkedHashSet<String> accounts;
+    private LinkedList<String> pendingTransferAccountNos;
     private HashMap<LocalDate, LinkedList<Long>> transactionIds;
 
     public Branch(String name) {
@@ -20,7 +21,7 @@ public class Branch {
         this.IFSC = genBranchIFSC();
         this.managerId = -1;
         this.accounts = new LinkedHashSet<String>();
-
+        this.pendingTransferAccountNos = new LinkedList<String>();
         // Transactions are indexed by transaction date, with the list of 
         // transaction id's as its value.
         this.transactionIds = new HashMap<LocalDate, LinkedList<Long>>();
@@ -40,6 +41,17 @@ public class Branch {
             transactionIds = this.transactionIds.get(transaction.date);
             transactionIds.addLast(transaction.id);
         }
+    }
+
+
+    // Add a account to pending transfer queue.
+    public void addAccountToPendingTransfer(String accountNo) {
+        this.pendingTransferAccountNos.addLast(accountNo);
+    }
+
+
+    public void removeAccountFromPendingTransfer(String accountNo) {
+        this.pendingTransferAccountNos.remove(accountNo);
     }
 
 
@@ -66,6 +78,10 @@ public class Branch {
     }
 
     // Getters
+    public LinkedList<String> getPendingAccountTransfer() {
+        return this.pendingTransferAccountNos;
+    }
+
     public String getIFSC() {
         return this.IFSC;
     }

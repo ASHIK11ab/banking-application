@@ -43,7 +43,10 @@ public class BranchManagerPage {
                 // case 2: removeCustomer(); break;
                 case 7: BranchManagerView.displayProfile(this.manager); break;
                 case 8: transactionHistory(); break;
-                case 9: proceed = 'n'; break;
+                case 9: transferToOtherBranch(); break;
+                case 10: displayPendingAccountTransfer(); break;
+                case 11: approveAccountTransfer(); break;
+                case 12: proceed = 'n'; break;
                 default: System.out.println("\nInvalid choiced !!!");
             }
 
@@ -273,6 +276,145 @@ public class BranchManagerPage {
     }
 
 
+    public void transferToOtherBranch() {
+        Branch currentBranch = Bank.getBranch(this.manager.getBranchIFSC());
+        Branch targetBranch;
+        Account account;
+        String accountNo;
+        String targetBranchIFSC;
+        char proceed = 'n';
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("\nTransfer account to other branch:" );
+        System.out.println("---------------------------------");
+        System.out.print("Enter account no: ");
+        accountNo = sc.nextLine();
+        System.out.print("Enter IFSC of the branch to transfer: ");
+        targetBranchIFSC = sc.nextLine();
+
+        account = Bank.getAccount(accountNo);
+        if(account == null) {
+            System.out.println("\nInvalid account no !!!");
+            return;
+        }
+
+        // Ensure account belongs to the managers branch.
+        if(!account.getBranchIFSC().equals(this.manager.getBranchIFSC())) {
+            System.out.println("\nAccount does not belong to this branch !!!");
+            return;
+        }
+
+        // Prevent transferring account to own branch.
+        if(currentBranch.getIFSC().equals(targetBranchIFSC)) {
+            System.out.println("\nCannot transfer account to self branch !!!");
+            return;
+        }
+
+        targetBranch = Bank.getBranch(targetBranchIFSC);
+        if(targetBranch == null) {
+            System.out.println("\nInvalid IFSC !!!");
+            return;
+        }
+
+        System.out.println("\nConfirm details:");
+        System.out.println("----------------");
+        System.out.println("Account holder name : " + Bank.getCustomer(account.getCustomerId()).getName());
+        System.out.println("Account No          : " + account.getAccountNo());
+        System.out.println("\nProceed to confirm (y/n): ");
+        proceed = sc.next().toLowerCase().charAt(0);
+        sc.nextLine();
+
+        if(proceed == 'n')
+            return;
+
+        // Transfer account to other branch.
+        currentBranch.removeAccount(account.getAccountNo());
+        targetBranch.addAccountToPendingTransfer(accountNo);
+        account.deactivate();
+
+        System.out.println("\nAccount removed from this branch");
+        System.out.println("Account transfer request sent to other branch");
+    }
+
+
+    public void displayPendingAccountTransfer() {
+        Branch branch = Bank.getBranch(this.manager.getBranchIFSC());
+        LinkedList<String> pendingTransferAccountNos = branch.getPendingAccountTransfer();
+        Account account;
+        int cnt = pendingTransferAccountNos.size();
+
+        if(cnt == 0) {
+            System.out.println("\nNo pending accounts for approval");
+            return;
+        }
+
+        System.out.println("\nPending accounts for approval (" + cnt + "):");
+        System.out.println("------------------------------------");
+
+        for(String accountNo : pendingTransferAccountNos) {
+            account = Bank.getAccount(accountNo);
+            System.out.println("\n" + account);
+        }
+    }
+
+
+    public void approveAccountTransfer() {
+        Branch branch = Bank.getBranch(this.manager.getBranchIFSC());
+        Customer customer;
+        Account account;
+        LinkedList<String> pendingAccountTransferIds;
+        String accountNo;
+        char proceed = 'n';
+
+        pendingAccountTransferIds = branch.getPendingAccountTransfer();
+        if(pendingAccountTransferIds.size() == 0) {
+            System.out.println("\nNo pending accounts for approval");
+            return;
+        }
+
+        System.out.println("\nApprove account transfer:");
+        System.out.println("-------------------------");
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter account no: ");
+        accountNo = sc.nextLine();
+
+        if(!pendingAccountTransferIds.contains(accountNo)) {
+            System.out.println("Invalid account no !!!");
+            return;
+        }
+
+        account = Bank.getAccount(accountNo);
+        customer = Bank.getCustomer(account.getCustomerId());
+
+        System.out.println("\n-----------------");
+        System.out.println("Account Details:");
+        System.out.println("-----------------");
+        System.out.println(account);
+        System.out.println("\n-----------------");
+        System.out.println("Customer Details:");
+        System.out.println("-----------------");
+        System.out.println(customer);
+
+        System.out.println("\nProceed to confirm account transfer (y/n): ");
+        proceed = sc.next().toLowerCase().charAt(0);
+        sc.nextLine();
+
+        if(proceed == 'n')
+            return;
+
+        // Tranfer approved.
+        account.setIFSC(branch.getIFSC());
+        account.activate();
+        branch.addAccount(account.getAccountNo());
+        branch.removeAccountFromPendingTransfer(account.getAccountNo());
+
+        System.out.println("\nAccount Transfer approved successfully");
+    }
+
+
     public void viewCustomer() {
         Customer customer;
         Account account;
@@ -310,6 +452,7 @@ public class BranchManagerPage {
         System.out.println("-----------------");
         System.out.println(customer);
         System.out.println("\nAccount Details:");
+        System.out.println("----------------");
         System.out.println(customer.getAccount());
     }
 }
