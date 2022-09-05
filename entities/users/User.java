@@ -38,6 +38,10 @@ public class User {
         return this.id;
     }
 
+    public String getPassword() {
+        return this.password;
+    }
+
     public String getName() {
         return this.name;
     }

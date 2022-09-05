@@ -145,6 +145,7 @@ public abstract class Account {
     }
 
     // Getters
+
     // Returns all transactions of this account.
     public HashMap<LocalDate, Pair<LinkedList<Long>, LocalDate>> getTransactionIdMap() {
         return this.transactionIds;
@@ -165,6 +166,10 @@ public abstract class Account {
 
     public String getAccountNo() {
         return this.accountNo;
+    }
+
+    public String getTransPassword() {
+        return this.transPassword;
     }
 
     public String getType() {
