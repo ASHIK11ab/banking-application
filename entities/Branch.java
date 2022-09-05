@@ -57,6 +57,10 @@ public class Branch {
         this.accounts.add(accountNo);
     }
 
+    public void removeAccount(String accountNo) {
+        this.accounts.remove(accountNo);
+    }
+
     public void removeManager() {
         this.managerId = -1;
     }

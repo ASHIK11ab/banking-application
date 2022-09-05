@@ -36,6 +36,7 @@ public class BranchManagerPage {
 
             switch(choice) {
                 case 1: addCustomer(); break;
+                case 2: removeCustomer(); break;
                 case 3: manageAccount("activate"); break;
                 case 4: manageAccount("deactivate"); break;
                 case 5: viewCustomer(); break;
@@ -114,39 +115,50 @@ public class BranchManagerPage {
     }
 
 
-    // public void removeCustomer() {
-    //     Branch branch = Bank.getBranch(this.manager.getBranchIFSC());
-    //     Account account;
-    //     Customer customer;
-    //     String accountNo;
-    //     char proceed = 'n';
+    public void removeCustomer() {
+        Branch branch = Bank.getBranch(this.manager.getBranchIFSC());
+        Account account;
+        String accountNo;
+        char proceed = 'n';
 
-    //     Scanner sc = new Scanner(System.in);
+        Scanner sc = new Scanner(System.in);
 
-    //     System.out.println("\nRemove Customer:");
-    //     System.out.println("----------------");
-    //     System.out.print("Enter account no: ");
-    //     accountNo = sc.nextLine();
+        System.out.println("\nRemove Customer:");
+        System.out.println("----------------");
+        System.out.print("Enter account no: ");
+        accountNo = sc.nextLine();
 
-    //     // Validate customer account with branch.
-    //     account = Bank.getAccount(accountNo);
+        // Validate customer account with branch.
+        account = Bank.getAccount(accountNo);
 
-    //     if(account == null) {
-    //         System.out.println("\nInvalid account no !!!");
-    //         return;
-    //     }
+        if(account == null) {
+            System.out.println("\nInvalid account no !!!");
+            return;
+        }
 
-    //     // Ensure account belongs to the managers branch.
-    //     if(!account.getBranchIFSC().equals(this.manager.getBranchIFSC())) {
-    //         System.out.println("\nAccount does not belong to this branch !!!");
-    //         return;
-    //     }
+        // Ensure account belongs to the managers branch.
+        if(!account.getBranchIFSC().equals(this.manager.getBranchIFSC())) {
+            System.out.println("\nAccount does not belong to this branch !!!");
+            return;
+        }
 
-    //     // Remove customer and his account.
-    //     Bank.removeAccount(account.getAccountNo());
-    //     branch.removeAccount(account.getAccountNo());
-    //     Bank.removeCustomer(account.getCustomerId());
-    // }
+        System.out.println("\nConfirm details:");
+        System.out.println("----------------");
+        System.out.println("Account holder name : " + Bank.getCustomer(account.getCustomerId()).getName());
+        System.out.println("Account No          : " + account.getAccountNo());
+        System.out.println("\nProceed to confirm (y/n): ");
+        proceed = sc.next().toLowerCase().charAt(0);
+
+        if(proceed == 'n')
+            return;
+
+        // Remove customer and his account.
+        Bank.removeAccount(account.getAccountNo());
+        branch.removeAccount(account.getAccountNo());
+        Bank.removeCustomer(account.getCustomerId());
+
+        System.out.println("\nCustomer removed successfully");
+    }
 
 
     public void manageAccount(String type) {

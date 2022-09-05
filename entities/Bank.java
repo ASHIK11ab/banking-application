@@ -112,4 +112,13 @@ public class Bank {
         Bank.transactions.put(transaction.id, transaction);
         Bank.addTransactionId(transaction);
     }
+
+    // Removes entities from banks.
+    public static void removeAccount(String accountNo) {
+        Bank.accounts.remove(accountNo);
+    }
+
+    public static void removeCustomer(int customerId) {
+        Bank.customers.remove(customerId);
+    }
 }

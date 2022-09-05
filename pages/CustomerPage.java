@@ -115,6 +115,13 @@ public class CustomerPage {
         beneficiaryAccountNo = customerAccount.getBeneficiary(beneficiaryNo - 1).getAccountNo();
         beneficiaryAccount = Bank.getAccount(beneficiaryAccountNo);
 
+        // When added beneficiary account is closed.
+        if(beneficiaryAccount == null) {
+            System.out.println("\nBeneficiary account does not exist !!!");
+            return;
+        }
+
+        // When beneficiary account is blocked.
         if(!beneficiaryAccount.isActive()) {
             System.out.println("\n\nCannot transfer amount !!!");
             return;

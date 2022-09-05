@@ -12,6 +12,7 @@ public class BranchManagerView {
         System.out.println("\nActions:");
         System.out.println("-------------------");
         System.out.println("1. Add customer");
+        System.out.println("2. Remove customer");
         System.out.println("3. Activate account");
         System.out.println("4. Deactivate account");
         System.out.println("5. View customer details");
