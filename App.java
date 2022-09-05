@@ -20,28 +20,40 @@ public class App {
         admin.setPassword("admin");
         Bank.setAdmin(admin);
 
-        Branch branch = new Branch("Poonamallee");
-        Bank.addBranch(branch);
+        // Two branches
+        Branch branch1 = new Branch("Poonamallee");
+        Branch branch2 = new Branch("Guduvancherry");
+        Bank.addBranch(branch1);
+        Bank.addBranch(branch2);
 
-        BranchManager manager = new BranchManager("Jason", "998757334", branch.getIFSC());
-        manager.setPassword("manager1");
-        Bank.addManager(manager);
-        manager.addToBranch(branch.getIFSC());
+        // Manager 1
+        BranchManager manager1 = new BranchManager("Jason", "998757334", branch1.getIFSC());
+        manager1.setPassword("manager1");
+        Bank.addManager(manager1);
+        manager1.addToBranch(branch1.getIFSC());
 
-        Customer customer = new Customer("Test 1", "937957495", "savings", branch.getIFSC(), "ADPA94757", "489571973264");
+        // Manager 2
+        BranchManager manager2 = new BranchManager("Jason", "998757334", branch2.getIFSC());
+        manager2.setPassword("manager2");
+        Bank.addManager(manager2);
+        manager2.addToBranch(branch2.getIFSC());
+
+        // customer 1
+        Customer customer = new Customer("Test 1", "937957495", "savings", branch1.getIFSC(), "ADPA94757", "489571973264");
         customer.setLoginPassword("test");
         customer.setTransPassword("test@trans");
-
+        
         Bank.addAccount(customer.getAccount());
-        branch.addAccount(customer.getAccount().getAccountNo());
+        branch1.addAccount(customer.getAccount().getAccountNo());
         Bank.addCustomer(customer);
 
-        Customer customer2 = new Customer("Test 2", "21235874", "current", branch.getIFSC(), "QWT937432", "832935712347");
+        // customer 2
+        Customer customer2 = new Customer("Test 2", "21235874", "current", branch1.getIFSC(), "QWT937432", "832935712347");
         customer2.setLoginPassword("test");
         customer2.setTransPassword("test@trans");
 
         Bank.addAccount(customer2.getAccount());
-        branch.addAccount(customer2.getAccount().getAccountNo());
+        branch1.addAccount(customer2.getAccount().getAccountNo());
         Bank.addCustomer(customer2);
 
         // Sample transaction data.
@@ -55,22 +67,22 @@ public class App {
         Account account2 = customer2.getAccount();
 
         Bank.addTransaction(t1);
-        branch.addTransactionId(t1);
+        branch1.addTransactionId(t1);
         account.addTransaction(t1);
         account2.addTransaction(t1);
 
         Bank.addTransaction(t2);
-        branch.addTransactionId(t2);
+        branch1.addTransactionId(t2);
         account.addTransaction(t2);
         account2.addTransaction(t2);
         
         Bank.addTransaction(t3);
-        branch.addTransactionId(t3);
+        branch1.addTransactionId(t3);
         account.addTransaction(t3);
         account2.addTransaction(t3);
         
         Bank.addTransaction(t4);
-        branch.addTransactionId(t4);
+        branch1.addTransactionId(t4);
         account.addTransaction(t4);
         account2.addTransaction(t4);
     }

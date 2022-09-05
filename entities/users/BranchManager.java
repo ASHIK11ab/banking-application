@@ -1,5 +1,7 @@
 package entities.users;
 
+import entities.Bank;
+
 public class BranchManager extends User {
     private String branchIFSC;
 
@@ -27,6 +29,7 @@ public class BranchManager extends User {
         repr += "Name        : " + this.getName() + "\n";
         repr += "Role        : Branch Manager" + "\n";
         repr += "Branch IFSC : " + this.getBranchIFSC() + "\n";
+        repr += "Branch Name : " + Bank.getBranch(this.getBranchIFSC()).getName() + "\n";
         repr += "Id          : " + this.getId() + "\n";
         repr += "Phone       : " + this.getPhone() + "\n";
         return repr;
