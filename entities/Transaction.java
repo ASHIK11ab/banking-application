@@ -44,8 +44,8 @@ public class Transaction {
         
         String repr = "";
         repr += "Transaction id : " + this.id + "\n";
-        repr += "Payer A/C No   : " + this.payerAccountNo + "\n";
-        repr += "Payee A/C No   : " + this.payeeAccountNo + "\n";
+        repr += "Payer          : " + this.payerAccountNo + " (" + this.payerName + ")" + "\n";
+        repr += "Payee          : " + this.payeeAccountNo + " (" + this.payeeName + ")" + "\n";
         repr += "Amount         : " + this.amount + "\n";
         repr += "Date & Time    : " + fmt.format(dateTime);
         return repr;

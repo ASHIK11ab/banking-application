@@ -146,6 +146,7 @@ public class BranchManagerPage {
         System.out.println("----------------");
         System.out.println("Account holder name : " + Bank.getCustomer(account.getCustomerId()).getName());
         System.out.println("Account No          : " + account.getAccountNo());
+        System.out.println("IFSC                : " + account.getBranchIFSC());
         System.out.println("\nProceed to confirm (y/n): ");
         proceed = sc.next().toLowerCase().charAt(0);
 
