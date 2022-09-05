@@ -16,6 +16,7 @@ public class BranchManagerView {
         System.out.println("4. Deactivate account");
         System.out.println("5. View customer details");
         System.out.println("7. Your Profile");
+        System.out.println("8. Transaction history");
         System.out.println("9. Logout");
         System.out.print("\nEnter choice: ");
         choice = sc.nextInt();

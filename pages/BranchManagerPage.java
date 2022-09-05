@@ -41,6 +41,7 @@ public class BranchManagerPage {
                 case 5: viewCustomer(); break;
                 // case 2: removeCustomer(); break;
                 case 7: BranchManagerView.displayProfile(this.manager); break;
+                case 8: transactionHistory(); break;
                 case 9: proceed = 'n'; break;
                 default: System.out.println("\nInvalid choiced !!!");
             }
@@ -204,6 +205,61 @@ public class BranchManagerPage {
     }
 
 
+    public void transactionHistory() {
+        Branch branch = Bank.getBranch(this.manager.getBranchIFSC());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LinkedList<Long> transactionIds;
+        Transaction transaction;
+        LocalDate fromDate;
+        LocalDate toDate;
+        LocalDate date;
+        String status;
+        int cnt = 0;
+
+        Scanner sc = new Scanner(System.in);
+        
+        System.out.println("\nTransaction History:");
+        System.out.println("--------------------");
+        System.out.print("\nEnter from date (dd/mm/yyyy) : ");
+        fromDate = LocalDate.parse(sc.nextLine(), formatter);
+        System.out.print("Enter to date (dd/mm/yyyy)   : ");
+        toDate = LocalDate.parse(sc.nextLine(), formatter);
+
+        if(toDate.isBefore(fromDate)) {
+            System.out.println("\nInvalid date range !!!");
+            return;
+        }
+
+        System.out.println("\n\nTransactions (" + formatter.format(fromDate) + ")" + " to (" + formatter.format(toDate) + "):");
+        System.out.println("------------------------------------------");
+        
+        date = fromDate;
+
+        while(date.isBefore(toDate) || date.isEqual(toDate)) {
+            // Move to next date if no transactions were made on a date.
+            if(branch.getTransactionIds(date) == null) {
+                date = date.plusDays(1);
+                continue;
+            }
+
+            transactionIds = branch.getTransactionIds(date);
+
+            for(Long transId : transactionIds) {
+                transaction = Bank.getTransaction(transId);
+                cnt++;
+                System.out.println("\n" + transaction);
+                status = (transaction.isSuccessfull) ? "Successfull" : "Failed";
+                System.out.println("Status         : " + status);
+            }
+
+            date = date.plusDays(1);
+        }
+
+        if(cnt == 0)
+            System.out.println("\nNo transactions in given range.");
+    }
+
+
     public void viewCustomer() {
         Customer customer;
         Account account;
@@ -223,6 +279,18 @@ public class BranchManagerPage {
         }
 
         customer = Bank.getCustomer(account.getCustomerId());
+
+        // Display only restricted information of a customer if the customer
+        // does not belong to this manager's branch.
+        if(!customer.getAccount().getBranchIFSC().equals(this.manager.getBranchIFSC())) {
+            System.out.println("\n-----------------");
+            System.out.println("Customer Details:");
+            System.out.println("-----------------");
+            System.out.println("Name   : " + customer.getName());
+            System.out.println("A/C No : " + customer.getAccount().getAccountNo()); 
+            System.out.println("IFSC   : " + customer.getAccount().getBranchIFSC());
+            return;
+        }
 
         System.out.println("\n-----------------");
         System.out.println("Customer Details:");
