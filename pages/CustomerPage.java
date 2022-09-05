@@ -342,11 +342,11 @@ public class CustomerPage {
                 // Display reciever name for debit and sender name for credit transactions.
                 if(transaction.payerAccountNo.equals(account.getAccountNo())) {
                     type = "Debit";
-                    nameToDisplay = Bank.getCustomer(Bank.getAccount(transaction.payeeAccountNo).getCustomerId()).getName();
+                    nameToDisplay = transaction.payeeName;
                 }
                 else {
                     type = "Credit";
-                    nameToDisplay = Bank.getCustomer(Bank.getAccount(transaction.payerAccountNo).getCustomerId()).getName();
+                    nameToDisplay = transaction.payerName;
                 }
 
                 transDate = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(transaction.date);
