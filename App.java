@@ -8,6 +8,7 @@ import entities.users.Admin;
 import entities.users.BranchManager;
 import entities.users.Customer;
 import entities.users.User;
+import pages.BranchManagerPage;
 import pages.CustomerPage;
 import entities.Branch;
 import entities.Transaction;
@@ -124,11 +125,26 @@ public class App {
             // Fixes the issue of being able to log in as admin by only knowing 
             // the password.
             if(user != null && user.getId() == userId && user.isPasswordEqual(password)) {
+
+                // Ensure customer account is not blocked.
+                if(choice == 3) {
+                    Customer customer = (Customer) user;
+                    if(!customer.getAccount().isActive()) {
+                        System.out.println("\nYour account is blocked !!!");
+                        System.out.println("\nContact your branch manager");
+                        System.out.print("\nPress enter to continue ... ");
+                        System.console().readLine();
+                        continue;
+                    }
+                }
+
                 System.out.println("\nLogin successfull");
                 System.out.print("\nPress enter to continue ... ");
                 System.console().readLine();
 
                 switch(choice) {
+                    case 2: BranchManagerPage managerPage = new BranchManagerPage(user.getId());
+                            managerPage.dashboard(); break;
                     case 3: CustomerPage customerPage = new CustomerPage(user.getId());
                             customerPage.dashboard(); break;
                 }
