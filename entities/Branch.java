@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.time.LocalDate;
 
-import ds.Pair;
 
 public class Branch {
     private static int _counter;
@@ -13,47 +12,42 @@ public class Branch {
     private String name;
     private int managerId;
     private LinkedHashSet<String> accounts;
-    private LocalDate recentTransactionDate;
-    private HashMap<LocalDate, Pair<LinkedList<Long>, LocalDate>> transactionIds;
+    private HashMap<LocalDate, LinkedList<Long>> transactionIds;
 
     public Branch(String name) {
         Branch._counter++;
         this.name = name;
         this.IFSC = genBranchIFSC();
         this.managerId = -1;
-        this.recentTransactionDate = null;
         this.accounts = new LinkedHashSet<String>();
 
-        // Transactions are indexed by transaction date, its value is a 'Pair'.
-        // The pair contains list of transaction ids on a date and the date of the
-        // transaction prior to the current date's transaction.
-        // Previous date is used for efficiently iterating transactions over a
-        // given date range.
-        this.transactionIds = 
-            new HashMap<LocalDate, Pair<LinkedList<Long>, LocalDate>>();
+        // Transactions are indexed by transaction date, with the list of 
+        // transaction id's as its value.
+        this.transactionIds = new HashMap<LocalDate, LinkedList<Long>>();
     }
 
+
+    // Adds a transaction id to this branch's transaction id's.
     public void addTransactionId(Transaction transaction) {
-        LinkedList<Long> todayTransactionIds;
+        LinkedList<Long> transactionIds;
         
         // First transaction of today.
         if(!this.transactionIds.containsKey(transaction.date)) {
-            todayTransactionIds = new LinkedList<Long>();
-            todayTransactionIds.addLast(transaction.id);
-
-            Pair<LinkedList<Long>, LocalDate> transactionPair = 
-                new Pair<LinkedList<Long>, LocalDate>();
-
-            transactionPair.setFirst(todayTransactionIds);
-            transactionPair.setSecond(this.recentTransactionDate);
-
-            this.transactionIds.put(transaction.date, transactionPair);
-            this.recentTransactionDate = transaction.date;
+            transactionIds = new LinkedList<Long>();
+            transactionIds.addLast(transaction.id);
+            this.transactionIds.put(transaction.date, transactionIds);
         } else {
-            todayTransactionIds = this.transactionIds.get(transaction.date).getFirst();
-            todayTransactionIds.addLast(transaction.id);
+            transactionIds = this.transactionIds.get(transaction.date);
+            transactionIds.addLast(transaction.id);
         }
     }
+
+
+    // Returns the list of transactions made on a given date.
+    public LinkedList<Long> getTransactionIds(LocalDate date) {
+        return this.transactionIds.get(date);
+    }
+
 
     private String genBranchIFSC() {
         return String.format("YESB0%06d", _counter);
